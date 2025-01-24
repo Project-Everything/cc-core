@@ -1,7 +1,6 @@
 package net.cc.core.storage;
 
 import net.cc.core.CorePlugin;
-import net.cc.core.util.Constants;
 import org.bukkit.configuration.file.FileConfiguration;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
@@ -40,20 +39,22 @@ public final class RedisManager {
         pool = new JedisPool(poolConfig, host, port, 0, password);
     }
 
-    private void set(final String key, final String value) {
+    public void set(final String key, final String value, final int expire) {
         try (Jedis jedis = pool.getResource()) {
-            jedis.set(Constants.KEY_PREFIX + key, value);
-            jedis.expire(key, 5);
+            jedis.set(key, value);
+            if (expire > 0) {
+                jedis.expire(key, expire);
+            }
         }
     }
 
-    private String get(final String key) {
+    public String get(final String key) {
         try (Jedis jedis = pool.getResource()) {
-            return jedis.get(Constants.KEY_PREFIX + key);
+            return jedis.get(key);
         }
     }
 
-    private List<String> getValues(final String key) {
+    public List<String> getValues(final String key) {
         try (Jedis jedis = pool.getResource()) {
             final ScanResult<String> scanResult = jedis.scan("0", new ScanParams().match(key));
             return scanResult.getResult();
