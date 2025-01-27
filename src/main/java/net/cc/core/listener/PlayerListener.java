@@ -44,6 +44,6 @@ public class PlayerListener implements Listener {
             plugin.getServer().broadcast(component);
         }
 
-        //plugin.getDatabaseManager().saveCorePlayer(corePlayer);
+        plugin.getDatabaseManager().saveCorePlayer(corePlayer);
     }
 }

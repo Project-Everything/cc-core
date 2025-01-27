@@ -21,13 +21,22 @@ public final class CorePlayerManager {
         final CorePlayer current = getPlayer(player);
         if (current != null) {
             current.setUsername(player.getName());
+            updatePlayer(current);
             return current;
         }
 
         final CorePlayer corePlayer = new CorePlayer(player);
+        plugin.getDatabaseManager().queryCorePlayer(player.getUniqueId()).thenAccept(corePlayerQuery -> {
+            if (corePlayerQuery.hasResults()) {
+                final CorePlayer existing = corePlayerQuery.getFirst();
+                corePlayer.setUsername(existing.getUsername());
+                corePlayer.setDisplayName(existing.getDisplayName());
+                corePlayer.setNickname(existing.getNickname());
+                corePlayer.setVanished(existing.isVanished());
+            }
+        });
 
-        // TODO query player from database
-
+        plugin.getDatabaseManager().saveCorePlayer(corePlayer);
         updatePlayer(corePlayer);
         return corePlayer;
     }
