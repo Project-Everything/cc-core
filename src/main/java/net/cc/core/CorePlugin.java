@@ -3,6 +3,7 @@ package net.cc.core;
 import io.papermc.paper.command.brigadier.Commands;
 import io.papermc.paper.plugin.lifecycle.event.types.LifecycleEvents;
 import net.cc.core.command.*;
+import net.cc.core.config.ConfigManager;
 import net.cc.core.hook.PlaceholderAPIHook;
 import net.cc.core.task.*;
 import net.cc.core.listener.PlayerListener;
@@ -16,6 +17,9 @@ import org.bukkit.scheduler.BukkitScheduler;
 @SuppressWarnings("UnstableApiUsage")
 public final class CorePlugin extends JavaPlugin {
 
+    private String serverName;
+
+    private ConfigManager configManager;
     private RedisManager redisManager;
     private DatabaseManager databaseManager;
     private CorePlayerManager corePlayerManager;
@@ -23,13 +27,14 @@ public final class CorePlugin extends JavaPlugin {
     @Override
     public void onLoad() {
         // Plugin load logic
-        redisManager = new RedisManager(this);
-        saveDefaultConfig();
+        configManager = new ConfigManager(this);
+        serverName = configManager.getServerName();
     }
 
     @Override
     public void onEnable() {
         // Plugin startup logic
+        redisManager = new RedisManager(this);
         databaseManager = new DatabaseManager(this);
         corePlayerManager = new CorePlayerManager(this);
 
@@ -51,6 +56,14 @@ public final class CorePlugin extends JavaPlugin {
         if (databaseManager != null) {
             databaseManager.close();
         }
+    }
+
+    public String getServerName() {
+        return serverName;
+    }
+
+    public ConfigManager getConfigManager() {
+        return configManager;
     }
 
     public RedisManager getRedisHandler() {

@@ -1,7 +1,8 @@
 package net.cc.core.storage;
 
 import net.cc.core.CorePlugin;
-import org.bukkit.configuration.file.FileConfiguration;
+import net.cc.core.config.ConfigManager;
+import net.cc.core.config.RedisSettings;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
@@ -13,20 +14,18 @@ import java.util.List;
 public final class RedisManager {
 
     private final CorePlugin plugin;
+    private final ConfigManager config;
     private JedisPool pool;
 
     public RedisManager(final CorePlugin plugin) {
         this.plugin = plugin;
+        this.config = plugin.getConfigManager();
 
         init();
     }
 
     private void init() {
-        final FileConfiguration config = plugin.getConfig();
-        final String host = config.getString("redis.host");
-        final int port = config.getInt("redis.port");
-        final String password = config.getString("redis.password");
-
+        final RedisSettings settings = config.getRedisSettings();
         final JedisPoolConfig poolConfig = new JedisPoolConfig();
 
         poolConfig.setMaxTotal(128);
@@ -36,7 +35,7 @@ public final class RedisManager {
         poolConfig.setTestOnReturn(true);
         poolConfig.setTestWhileIdle(true);
 
-        pool = new JedisPool(poolConfig, host, port, 0, password);
+        pool = new JedisPool(poolConfig, settings.getHost(), settings.getPort(), 0, settings.getPassword());
     }
 
     public void set(final String key, final String value, final int expire) {

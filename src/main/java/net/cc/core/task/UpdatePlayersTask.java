@@ -4,7 +4,7 @@ import net.cc.core.CorePlugin;
 import net.cc.core.player.CorePlayer;
 import org.bukkit.entity.Player;
 
-public class UpdatePlayersTask implements Runnable {
+public final class UpdatePlayersTask implements Runnable {
 
     private final CorePlugin plugin;
 

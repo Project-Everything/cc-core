@@ -1,6 +1,6 @@
 package net.cc.core.util;
 
-public class Constants {
+public final class Constants {
 
     /* Permission Nodes */
     public static final String PERMISSION_COMMAND_NAME = "cc.command.name";

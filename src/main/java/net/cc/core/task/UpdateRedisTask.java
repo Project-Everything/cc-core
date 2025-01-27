@@ -4,7 +4,7 @@ import net.cc.core.CorePlugin;
 import net.cc.core.player.CorePlayer;
 import org.bukkit.entity.Player;
 
-public class UpdateRedisTask implements Runnable {
+public final class UpdateRedisTask implements Runnable {
 
     private final CorePlugin plugin;
 

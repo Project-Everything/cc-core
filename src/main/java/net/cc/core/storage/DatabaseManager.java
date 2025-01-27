@@ -3,9 +3,10 @@ package net.cc.core.storage;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import net.cc.core.CorePlugin;
+import net.cc.core.config.ConfigManager;
+import net.cc.core.config.DatabaseSettings;
 import net.cc.core.player.CorePlayer;
 import net.cc.core.storage.query.CorePlayerQuery;
-import org.bukkit.configuration.file.FileConfiguration;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -16,32 +17,27 @@ import java.util.logging.Logger;
 
 public final class DatabaseManager {
 
-    private final FileConfiguration config;
     private final Logger logger;
+    private final ConfigManager config;
     private HikariDataSource dataSource;
 
     private static final String PLAYERS_TABLE = "core_players";
 
     public DatabaseManager(final CorePlugin plugin) {
         this.logger = plugin.getLogger();
-        this.config = plugin.getConfig();
+        this.config = plugin.getConfigManager();
 
         init();
         createTables();
     }
 
     private void init() {
+        final DatabaseSettings settings = config.getDatabaseSettings();
         final HikariConfig hikariConfig = new HikariConfig();
 
-        final String host = config.getString("database.host");
-        final int port = config.getInt("database.port");
-        final String database = config.getString("database.database");
-        final String username = config.getString("database.username");
-        final String password = config.getString("database.password");
-
-        hikariConfig.setJdbcUrl("jdbc:mysql://" + host + ":" + port + "/" + database);
-        hikariConfig.setUsername(username);
-        hikariConfig.setPassword(password);
+        hikariConfig.setJdbcUrl("jdbc:mysql://" + settings.getHost() + ":" + settings.getPort() + "/" + settings.getDatabase());
+        hikariConfig.setUsername(settings.getUsername());
+        hikariConfig.setPassword(settings.getPassword());
         hikariConfig.addDataSourceProperty("cachePrepStmts", "true");
         hikariConfig.addDataSourceProperty("prepStmtCacheSize", "250");
         hikariConfig.addDataSourceProperty("prepStmtCacheSqlLimit", "2048");

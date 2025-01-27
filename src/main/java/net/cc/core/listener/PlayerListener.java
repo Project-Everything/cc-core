@@ -10,7 +10,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
-public class PlayerListener implements Listener {
+public final class PlayerListener implements Listener {
 
     private final CorePlugin plugin;
 
