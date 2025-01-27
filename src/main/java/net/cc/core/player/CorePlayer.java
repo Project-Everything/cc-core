@@ -1,5 +1,8 @@
 package net.cc.core.player;
 
+import org.bukkit.entity.Player;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -11,6 +14,17 @@ public class CorePlayer {
     private String nickname;
     private boolean vanished;
     private List<UUID> friends;
+
+    public CorePlayer(
+            final Player player
+    ) {
+        mojangId = player.getUniqueId();
+        username = player.getName();
+        displayName = "<gray>" + player.getName() + "</gray>";
+        nickname = "";
+        vanished = false;
+        friends = new ArrayList<>();
+    }
 
     public CorePlayer(
             final UUID mojangId,
