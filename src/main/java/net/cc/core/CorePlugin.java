@@ -3,11 +3,13 @@ package net.cc.core;
 import io.papermc.paper.command.brigadier.Commands;
 import io.papermc.paper.plugin.lifecycle.event.types.LifecycleEvents;
 import net.cc.core.command.*;
+import net.cc.core.hook.PlaceholderAPIHook;
 import net.cc.core.task.*;
 import net.cc.core.listener.PlayerListener;
 import net.cc.core.player.CorePlayerManager;
 import net.cc.core.storage.DatabaseManager;
 import net.cc.core.storage.RedisManager;
+import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitScheduler;
 
@@ -30,6 +32,10 @@ public final class CorePlugin extends JavaPlugin {
         // Plugin startup logic
         databaseManager = new DatabaseManager(this);
         corePlayerManager = new CorePlayerManager(this);
+
+        if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null) {
+            new PlaceholderAPIHook(this).register();
+        }
 
         registerCommands();
         registerListeners();
