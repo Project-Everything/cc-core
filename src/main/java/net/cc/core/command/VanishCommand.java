@@ -41,10 +41,10 @@ public final class VanishCommand {
             if (corePlayer != null) {
                 boolean vanished = corePlayer.isVanished();
                 if (vanished) {
-                    player.sendMessage(mm.deserialize(Constants.MESSAGE_COMMAND_VANISH_ENABLE));
-                } else {
                     player.sendMessage(mm.deserialize(Constants.MESSAGE_COMMAND_VANISH_DISABLE));
                     player.removePotionEffect(PotionEffectType.INVISIBILITY);
+                } else {
+                    player.sendMessage(mm.deserialize(Constants.MESSAGE_COMMAND_VANISH_ENABLE));
                 }
                 corePlayer.setVanished(!vanished);
                 plugin.getCorePlayerManager().updatePlayer(corePlayer);

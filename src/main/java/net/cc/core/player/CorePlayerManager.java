@@ -33,11 +33,12 @@ public final class CorePlayerManager {
                 corePlayer.setDisplayName(existing.getDisplayName());
                 corePlayer.setNickname(existing.getNickname());
                 corePlayer.setVanished(existing.isVanished());
+            } else {
+                plugin.getDatabaseManager().saveCorePlayer(corePlayer);
             }
+            updatePlayer(corePlayer);
         });
 
-        plugin.getDatabaseManager().saveCorePlayer(corePlayer);
-        updatePlayer(corePlayer);
         return corePlayer;
     }
 
