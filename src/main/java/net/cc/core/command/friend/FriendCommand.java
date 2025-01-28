@@ -11,6 +11,7 @@ import net.cc.core.player.CorePlayerManager;
 import net.cc.core.util.CoreUtils;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
+import org.apache.commons.lang3.StringUtils;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -59,13 +60,17 @@ public final class FriendCommand {
             final CorePlayer source = playerManager.getPlayer(player);
             final CorePlayer target = context.getArgument("player", CorePlayer.class);
 
-            source.addFriend(target.getMojangId());
-            playerManager.updatePlayer(source);
-            player.sendMessage(Component.text("Added " + target.getUsername() + " as a friend!", NamedTextColor.GOLD));
+            if (source.getFriends().contains(target.getMojangId())) {
+                player.sendMessage(Component.text(target.getUsername() + " is already a friend.", NamedTextColor.RED));
+            } else {
+                source.addFriend(target.getMojangId());
+                playerManager.updatePlayer(source);
+                player.sendMessage(Component.text("Added " + target.getUsername() + " as a friend!", NamedTextColor.GOLD));
 
-            final Player targetPlayer = plugin.getServer().getPlayer(target.getMojangId());
-            if (targetPlayer != null) {
-                targetPlayer.sendMessage(Component.text(source.getUsername() + " added you as a friend!", NamedTextColor.GOLD));
+                final Player targetPlayer = plugin.getServer().getPlayer(target.getMojangId());
+                if (targetPlayer != null) {
+                    targetPlayer.sendMessage(Component.text(source.getUsername() + " added you as a friend!", NamedTextColor.GOLD));
+                }
             }
         } else {
             sender.sendMessage(CoreUtils.getSenderNotPlayerComponent());
@@ -79,9 +84,13 @@ public final class FriendCommand {
             final CorePlayer source = playerManager.getPlayer(player);
             final CorePlayer target = context.getArgument("player", CorePlayer.class);
 
-            source.removeFriend(target.getMojangId());
-            playerManager.updatePlayer(source);
-            player.sendMessage(Component.text("Removed " + target.getUsername() + " from your friends list.", NamedTextColor.GOLD));
+            if (source.getFriends().contains(target.getMojangId())) {
+                player.sendMessage(Component.text(target.getUsername() + " is not a friend.", NamedTextColor.RED));
+            } else {
+                source.removeFriend(target.getMojangId());
+                playerManager.updatePlayer(source);
+                player.sendMessage(Component.text("Removed " + target.getUsername() + " from your friends list.", NamedTextColor.GOLD));
+            }
         } else {
             sender.sendMessage(CoreUtils.getSenderNotPlayerComponent());
         }
@@ -92,19 +101,19 @@ public final class FriendCommand {
         final CommandSender sender = context.getSource().getSender();
         if (sender instanceof Player player) {
             final CorePlayer source = playerManager.getPlayer(player);
-            final List<CorePlayer> friends = new ArrayList<>();
+            final List<String> friends = new ArrayList<>();
 
             for (final UUID mojangId : source.getFriends()) {
                 final CorePlayer friend = playerManager.getPlayer(mojangId);
                 if (friend != null) {
-                    friends.add(friend);
+                    friends.add(friend.getUsername());
                 }
-
-                final int count = source.getFriends().size();
-                final String list = friends.stream().toString();
-                final Component component = Component.text("Friends [" + count + "]: " + list, NamedTextColor.GOLD);
-                player.sendMessage(component);
             }
+
+            final int count = source.getFriends().size();
+            final String list = StringUtils.join(friends, ", ");
+            final Component component = Component.text("Friends [" + count + "]: " + list, NamedTextColor.GOLD);
+            player.sendMessage(component);
         } else {
             sender.sendMessage(CoreUtils.getSenderNotPlayerComponent());
         }

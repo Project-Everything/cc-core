@@ -28,17 +28,15 @@ public final class UpdateRedisTask implements Runnable {
             }
         }
 
-        final String key = "core:players:*";
-        final List<String> values = redis.getValues(key);
-
-        if (values == null || values.isEmpty()) {
-            return;
-        }
-
         final List<CorePlayer> players = new ArrayList<>();
-        for (final String value : values) {
-            final Gson gson = new Gson();
-            players.add(gson.fromJson(value, CorePlayer.class));
+        final List<String> keys = redis.getValues("core:players:*");
+
+        for (String key : keys) {
+            final String value = redis.get(key);
+            if (value != null) {
+                final Gson gson = new Gson();
+                players.add(gson.fromJson(value, CorePlayer.class));
+            }
         }
 
         plugin.getCorePlayerManager().syncPlayerList(players);
