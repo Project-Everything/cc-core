@@ -2,8 +2,10 @@ package net.cc.core;
 
 import io.papermc.paper.command.brigadier.Commands;
 import io.papermc.paper.plugin.lifecycle.event.types.LifecycleEvents;
-import net.cc.core.command.*;
 import net.cc.core.command.friend.FriendCommand;
+import net.cc.core.command.player.DisplayNameCommand;
+import net.cc.core.command.player.NicknameCommand;
+import net.cc.core.command.player.VanishCommand;
 import net.cc.core.config.ConfigManager;
 import net.cc.core.hook.PlaceholderAPIHook;
 import net.cc.core.task.*;

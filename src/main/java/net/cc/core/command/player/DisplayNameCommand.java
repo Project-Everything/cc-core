@@ -1,4 +1,4 @@
-package net.cc.core.command;
+package net.cc.core.command.player;
 
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.arguments.StringArgumentType;
