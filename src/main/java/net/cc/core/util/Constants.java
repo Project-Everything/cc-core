@@ -4,6 +4,7 @@ public final class Constants {
 
     /* Permission Nodes */
     public static final String PERMISSION_COMMAND_NAME = "cc.command.name";
+    public static final String PERMISSION_COMMAND_FRIEND = "cc.command.friend";
     public static final String PERMISSION_COMMAND_NICKNAME = "cc.command.nickname";
     public static final String PERMISSION_COMMAND_VANISH = "cc.command.vanish";
 

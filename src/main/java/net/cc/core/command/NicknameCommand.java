@@ -3,7 +3,6 @@ package net.cc.core.command;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
-import com.mojang.brigadier.tree.LiteralCommandNode;
 import io.papermc.paper.command.brigadier.CommandSourceStack;
 import io.papermc.paper.command.brigadier.Commands;
 import net.cc.core.CorePlugin;
@@ -25,7 +24,7 @@ public final class NicknameCommand {
         this.plugin = plugin;
         this.mm = MiniMessage.miniMessage();
 
-        LiteralCommandNode<CommandSourceStack> node = Commands.literal("nickname")
+        var node = Commands.literal("nickname")
                 .requires(s -> s.getSender().hasPermission(Constants.PERMISSION_COMMAND_NICKNAME) && s.getSender() instanceof Player)
                 .executes(this::view)
                 .then(Commands.literal("reset")

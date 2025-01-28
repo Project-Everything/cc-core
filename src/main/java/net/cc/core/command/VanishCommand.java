@@ -2,7 +2,6 @@ package net.cc.core.command;
 
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.context.CommandContext;
-import com.mojang.brigadier.tree.LiteralCommandNode;
 import io.papermc.paper.command.brigadier.CommandSourceStack;
 import io.papermc.paper.command.brigadier.Commands;
 import net.cc.core.CorePlugin;
@@ -25,7 +24,7 @@ public final class VanishCommand {
         this.plugin = plugin;
         this.mm = MiniMessage.miniMessage();
 
-        LiteralCommandNode<CommandSourceStack> node = Commands.literal("vanish")
+        var node = Commands.literal("vanish")
                 .requires(stack -> stack.getSender().hasPermission(Constants.PERMISSION_COMMAND_VANISH))
                 .executes(this::execute0)
                 .build();
