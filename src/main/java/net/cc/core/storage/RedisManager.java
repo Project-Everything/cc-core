@@ -13,12 +13,10 @@ import java.util.List;
 
 public final class RedisManager {
 
-    private final CorePlugin plugin;
     private final ConfigManager config;
     private JedisPool pool;
 
     public RedisManager(final CorePlugin plugin) {
-        this.plugin = plugin;
         this.config = plugin.getConfigManager();
 
         init();

@@ -85,4 +85,12 @@ public class CorePlayer {
     public void setFriends(final List<UUID> friends) {
         this.friends = friends;
     }
+
+    public void addFriend(final UUID mojangId) {
+        this.friends.add(mojangId);
+    }
+
+    public void removeFriend(final UUID mojangId) {
+        this.friends.remove(mojangId);
+    }
 }

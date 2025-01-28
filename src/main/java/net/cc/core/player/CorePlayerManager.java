@@ -5,16 +5,20 @@ import net.cc.core.CorePlugin;
 import net.cc.core.storage.RedisManager;
 import org.bukkit.entity.Player;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 public final class CorePlayerManager {
 
     private final CorePlugin plugin;
     private final RedisManager redis;
+    private final List<CorePlayer> all;
 
     public CorePlayerManager(final CorePlugin plugin) {
         this.plugin = plugin;
         this.redis = plugin.getRedisHandler();
+        this.all = new ArrayList<>();
     }
 
     public CorePlayer loadPlayer(final Player player) {
@@ -58,6 +62,19 @@ public final class CorePlayerManager {
         return gson.fromJson(value, CorePlayer.class);
     }
 
+    public CorePlayer getPlayer(final String name) {
+        for (final CorePlayer corePlayer : all) {
+            if (corePlayer.getUsername().equals(name)) {
+                return corePlayer;
+            }
+        }
+        return null;
+    }
+
+    public List<CorePlayer> getPlayers() {
+        return all;
+    }
+
     public void updatePlayer(final CorePlayer corePlayer) {
         final String key = "core:players:" + corePlayer.getMojangId().toString();
 
@@ -65,5 +82,10 @@ public final class CorePlayerManager {
         final String json = gson.toJson(corePlayer);
 
         redis.set(key, json, 5);
+    }
+
+    public void syncPlayerList(final List<CorePlayer> players) {
+        all.clear();
+        all.addAll(players);
     }
 }
