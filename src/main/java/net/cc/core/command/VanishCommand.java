@@ -6,7 +6,7 @@ import io.papermc.paper.command.brigadier.CommandSourceStack;
 import io.papermc.paper.command.brigadier.Commands;
 import net.cc.core.CorePlugin;
 import net.cc.core.player.CorePlayer;
-import net.cc.core.util.Constants;
+import net.cc.core.util.CoreUtils;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -25,7 +25,7 @@ public final class VanishCommand {
         this.mm = MiniMessage.miniMessage();
 
         var node = Commands.literal("vanish")
-                .requires(stack -> stack.getSender().hasPermission(Constants.PERMISSION_COMMAND_VANISH))
+                .requires(stack -> stack.getSender().hasPermission(CoreUtils.PERMISSION_COMMAND_VANISH))
                 .executes(this::execute0)
                 .build();
 
@@ -40,17 +40,17 @@ public final class VanishCommand {
             if (corePlayer != null) {
                 boolean vanished = corePlayer.isVanished();
                 if (vanished) {
-                    player.sendMessage(mm.deserialize(Constants.MESSAGE_COMMAND_VANISH_DISABLE));
+                    player.sendMessage(mm.deserialize("<gold>Vanish has been</gold> <red>disabled</red><gold>.</gold>"));
                     player.removePotionEffect(PotionEffectType.INVISIBILITY);
                 } else {
-                    player.sendMessage(mm.deserialize(Constants.MESSAGE_COMMAND_VANISH_ENABLE));
+                    player.sendMessage(mm.deserialize("<gold>Vanish has been</gold> <green>enabled</green><gold>.</gold>"));
                 }
                 corePlayer.setVanished(!vanished);
                 plugin.getCorePlayerManager().updatePlayer(corePlayer);
                 return Command.SINGLE_SUCCESS;
             }
         } else {
-            sender.sendMessage(mm.deserialize(Constants.MESSAGE_SENDER_NOT_PLAYER));
+            sender.sendMessage(CoreUtils.getSenderNotPlayerComponent());
             return Command.SINGLE_SUCCESS;
         }
         return 0;

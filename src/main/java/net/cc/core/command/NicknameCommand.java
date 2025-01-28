@@ -7,9 +7,8 @@ import io.papermc.paper.command.brigadier.CommandSourceStack;
 import io.papermc.paper.command.brigadier.Commands;
 import net.cc.core.CorePlugin;
 import net.cc.core.player.CorePlayer;
-import net.cc.core.util.Constants;
+import net.cc.core.util.CoreUtils;
 import net.kyori.adventure.text.minimessage.MiniMessage;
-import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import org.bukkit.entity.Player;
 
 import java.util.List;
@@ -25,7 +24,7 @@ public final class NicknameCommand {
         this.mm = MiniMessage.miniMessage();
 
         var node = Commands.literal("nickname")
-                .requires(s -> s.getSender().hasPermission(Constants.PERMISSION_COMMAND_NICKNAME) && s.getSender() instanceof Player)
+                .requires(s -> s.getSender().hasPermission(CoreUtils.PERMISSION_COMMAND_NICKNAME) && s.getSender() instanceof Player)
                 .executes(this::view)
                 .then(Commands.literal("reset")
                         .executes(this::reset))
@@ -43,9 +42,9 @@ public final class NicknameCommand {
         if (corePlayer != null) {
             final String nickname = corePlayer.getNickname();
             if (!nickname.isEmpty()) {
-                player.sendMessage(mm.deserialize(Constants.MESSAGE_COMMAND_NICKNAME_VIEW, Placeholder.parsed("nickname", nickname)));
+                player.sendMessage(mm.deserialize("<gold>Your current nickname is:</gold> " + nickname + "<reset><gold>.\nSet your nickname with /nickname <nickname>.</gold>"));
             } else {
-                player.sendMessage(mm.deserialize(Constants.MESSAGE_COMMAND_NICKNAME_EMPTY));
+                player.sendMessage(mm.deserialize("<gold>You do not have a nickname.\nSet your nickname with /nickname <nickname>.</gold>"));
             }
         }
         return Command.SINGLE_SUCCESS;
@@ -57,7 +56,7 @@ public final class NicknameCommand {
         if (corePlayer != null) {
             String nickname = ctx.getArgument("nickname", String.class);
             corePlayer.setNickname(nickname);
-            player.sendMessage(mm.deserialize(Constants.MESSAGE_COMMAND_NICKNAME_SET, Placeholder.parsed("nickname", nickname)));
+            player.sendMessage(mm.deserialize("<gold>Nickname has been set to</gold> " + nickname + "<reset><gold>.</gold>"));
             plugin.getCorePlayerManager().updatePlayer(corePlayer);
         }
         return Command.SINGLE_SUCCESS;
@@ -68,7 +67,7 @@ public final class NicknameCommand {
         CorePlayer corePlayer = plugin.getCorePlayerManager().getPlayer(player);
         if (corePlayer != null) {
             corePlayer.setNickname("");
-            player.sendMessage(mm.deserialize(Constants.MESSAGE_COMMAND_NICKNAME_RESET));
+            player.sendMessage(mm.deserialize("<gold>Nickname has been reset.</gold>"));
             plugin.getCorePlayerManager().updatePlayer(corePlayer);
         }
         return Command.SINGLE_SUCCESS;

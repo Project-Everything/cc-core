@@ -7,10 +7,9 @@ import io.papermc.paper.command.brigadier.CommandSourceStack;
 import io.papermc.paper.command.brigadier.Commands;
 import net.cc.core.CorePlugin;
 import net.cc.core.player.CorePlayer;
-import net.cc.core.util.Constants;
+import net.cc.core.util.CoreUtils;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
-import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bukkit.entity.Player;
 
@@ -27,7 +26,7 @@ public final class DisplayNameCommand {
         this.mm = MiniMessage.miniMessage();
 
         var node = Commands.literal("displayname")
-                .requires(s -> s.getSender().hasPermission(Constants.PERMISSION_COMMAND_NAME) && s.getSender() instanceof Player)
+                .requires(s -> s.getSender().hasPermission(CoreUtils.PERMISSION_COMMAND_NAME) && s.getSender() instanceof Player)
                 .executes(this::view)
                 .then(Commands.literal("reset")
                         .executes(this::reset))
@@ -44,7 +43,7 @@ public final class DisplayNameCommand {
 
         if (weavePlayer != null) {
             final String displayName = weavePlayer.getDisplayName();
-            player.sendMessage(mm.deserialize(Constants.MESSAGE_COMMAND_NAME_VIEW, Placeholder.parsed("name", displayName)));
+            player.sendMessage(mm.deserialize("<gold>Your display name is:</gold> " + displayName + "<reset><gold>.\nSet your display name with /displayname {name}.</gold>"));
         }
         return Command.SINGLE_SUCCESS;
     }
@@ -60,10 +59,10 @@ public final class DisplayNameCommand {
 
             if (player.getName().equals(rawDisplayName)) {
                 corePlayer.setDisplayName(displayName);
-                player.sendMessage(mm.deserialize(Constants.MESSAGE_COMMAND_NAME_SET, Placeholder.parsed("name", displayName)));
+                player.sendMessage(mm.deserialize("<gold>Display name has been set to</gold> " + displayName + "<reset><gold>.</gold>"));
                 plugin.getCorePlayerManager().updatePlayer(corePlayer);
             } else {
-                player.sendMessage(mm.deserialize(Constants.MESSAGE_COMMAND_NAME_INVALID));
+                player.sendMessage(mm.deserialize("<red>Display name does not match your player name</red>"));
             }
         }
         return Command.SINGLE_SUCCESS;
@@ -76,7 +75,7 @@ public final class DisplayNameCommand {
         if (corePlayer != null) {
             final String displayName = "<gray>" + player.getName() + "</gray>";
             corePlayer.setDisplayName(displayName);
-            player.sendMessage(mm.deserialize(Constants.MESSAGE_COMMAND_NAME_RESET));
+            player.sendMessage(mm.deserialize("<gold>Display name has been reset.</gold>"));
             plugin.getCorePlayerManager().updatePlayer(corePlayer);
         }
         return Command.SINGLE_SUCCESS;

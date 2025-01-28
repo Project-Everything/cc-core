@@ -2,7 +2,7 @@ package net.cc.core.task;
 
 import net.cc.core.CorePlugin;
 import net.cc.core.player.CorePlayer;
-import net.cc.core.util.Constants;
+import net.cc.core.util.CoreUtils;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
@@ -26,7 +26,7 @@ public final class UpdateVanishTask implements Runnable {
                 continue;
             }
 
-            if (!player.hasPermission(Constants.PERMISSION_COMMAND_VANISH)) {
+            if (!player.hasPermission(CoreUtils.PERMISSION_COMMAND_VANISH)) {
                 corePlayer.setVanished(false);
             }
 
