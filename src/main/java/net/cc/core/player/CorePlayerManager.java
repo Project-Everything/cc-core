@@ -64,6 +64,6 @@ public final class CorePlayerManager {
         final Gson gson = new Gson();
         final String json = gson.toJson(corePlayer);
 
-        redis.set(key, json, 10);
+        redis.set(key, json, 5);
     }
 }
