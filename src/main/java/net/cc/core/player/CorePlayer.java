@@ -1,9 +1,8 @@
 package net.cc.core.player;
 
-import org.apache.commons.lang3.StringUtils;
 import org.bukkit.entity.Player;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -14,7 +13,7 @@ public class CorePlayer {
     private String displayName;
     private String nickname;
     private boolean vanished;
-    private String friends;
+    private List<String> friends;
 
     public CorePlayer(
             final Player player
@@ -24,7 +23,7 @@ public class CorePlayer {
         displayName = "<gray>" + player.getName() + "</gray>";
         nickname = "";
         vanished = false;
-        friends = "";
+        friends = new ArrayList<>();
     }
 
     public CorePlayer(
@@ -33,7 +32,7 @@ public class CorePlayer {
             final String displayName,
             final String nickname,
             final boolean vanished,
-            final String friends
+            final List<String> friends
     ) {
         this.mojangId = mojangId;
         this.username = username;
@@ -79,24 +78,23 @@ public class CorePlayer {
         this.vanished = vanished;
     }
 
-    public String getFriends() {
+    public List<String> getFriends() {
         return friends;
     }
 
-    public void setFriends(final String friends) {
+    public void setFriends(final List<String> friends) {
         this.friends = friends;
     }
 
     public void addFriend(final UUID mojangId) {
-        this.friends = StringUtils.appendIfMissing(this.friends, "," + mojangId.toString());
+        this.friends.add(mojangId.toString());
     }
 
     public void removeFriend(final UUID mojangId) {
-        this.friends = StringUtils.remove(this.friends, "," + mojangId.toString());
+        this.friends.remove(mojangId.toString());
     }
 
     public boolean isFriend(final UUID mojangId) {
-        List<String> friends = Arrays.stream(this.friends.split(",")).toList();
-        return friends.contains(mojangId.toString());
+        return this.friends.contains(mojangId.toString());
     }
 }

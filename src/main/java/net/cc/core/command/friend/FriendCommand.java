@@ -71,6 +71,7 @@ public final class FriendCommand {
 
                 final Player targetPlayer = plugin.getServer().getPlayer(target.getMojangId());
                 if (targetPlayer != null) {
+
                     targetPlayer.sendMessage(Component.text(source.getUsername() + " added you as a friend!", NamedTextColor.GOLD));
                 }
             }
@@ -103,18 +104,21 @@ public final class FriendCommand {
         final CommandSender sender = context.getSource().getSender();
         if (sender instanceof Player player) {
             final CorePlayer source = playerManager.getPlayer(player);
-            final List<String> friends = new ArrayList<>();
+            final List<String> friends = source.getFriends();
+            final List<String> usernames = new ArrayList<>();
 
-            for (final String friendString : source.getFriends().split(",")) {
-                final UUID mojangId = UUID.fromString(friendString.replace(",", ""));
-                final CorePlayer friend = playerManager.getPlayer(mojangId);
-                if (friend != null) {
-                    friends.add(friend.getUsername());
+            if (!friends.isEmpty()) {
+                for (final String friendString : friends) {
+                    final UUID mojangId = UUID.fromString(friendString);
+                    final CorePlayer friend = playerManager.getPlayer(mojangId);
+                    if (friend != null) {
+                        usernames.add(friend.getUsername());
+                    }
                 }
             }
 
-            final int count = source.getFriends().split(",").length;
-            final String list = StringUtils.join(friends, ", ");
+            final int count = usernames.size();
+            final String list = StringUtils.join(usernames, ", ");
             final Component component = Component.text("Friends [" + count + "]: " + list, NamedTextColor.GOLD);
             player.sendMessage(component);
         } else {

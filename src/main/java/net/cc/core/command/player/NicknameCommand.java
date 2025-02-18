@@ -42,7 +42,7 @@ public final class NicknameCommand {
         if (corePlayer != null) {
             final String nickname = corePlayer.getNickname();
             if (!nickname.isEmpty()) {
-                player.sendMessage(mm.deserialize("<gold>Your current nickname is:</gold> " + nickname + "<reset><gold>.\nSet your nickname with /nickname <nickname>.</gold>"));
+                player.sendMessage(mm.deserialize("<gold>Your current nickname is: </gold><yellow>" + nickname + "<reset><gold>.\nSet your nickname with /nickname <nickname>.</gold>"));
             } else {
                 player.sendMessage(mm.deserialize("<gold>You do not have a nickname.\nSet your nickname with /nickname <nickname>.</gold>"));
             }

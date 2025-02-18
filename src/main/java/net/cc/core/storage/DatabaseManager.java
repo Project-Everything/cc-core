@@ -9,6 +9,8 @@ import net.cc.core.player.CorePlayer;
 import net.cc.core.storage.query.CorePlayerQuery;
 
 import java.sql.*;
+import java.util.Arrays;
+import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.logging.Logger;
@@ -64,13 +66,13 @@ public final class DatabaseManager {
                 statement.setString(3, corePlayer.getDisplayName());
                 statement.setString(4, corePlayer.getNickname());
                 statement.setBoolean(5, corePlayer.isVanished());
-                statement.setString(6, corePlayer.getFriends());
+                statement.setString(6, listToString(corePlayer.getFriends()));
                 // update
                 statement.setString(7, corePlayer.getUsername());
                 statement.setString(8, corePlayer.getDisplayName());
                 statement.setString(9, corePlayer.getNickname());
                 statement.setBoolean(10, corePlayer.isVanished());
-                statement.setString(11, corePlayer.getFriends());
+                statement.setString(11, listToString(corePlayer.getFriends()));
                 statement.execute();
             } catch (SQLException e) {
                 logger.severe("Error saving core player: " + e.getMessage());
@@ -97,7 +99,7 @@ public final class DatabaseManager {
                     final String displayName = resultSet.getString("display_name");
                     final String nickname = resultSet.getString("nickname");
                     final boolean vanished = resultSet.getBoolean("vanished");
-                    final String friends = resultSet.getString("friends");
+                    final List<String> friends = stringToList(resultSet.getString("friends"));
 
                     query.addResult(new CorePlayer(mojangId, username, displayName, nickname, vanished, friends));
                 }
@@ -116,5 +118,19 @@ public final class DatabaseManager {
 
     private Connection getConnection() throws SQLException {
         return dataSource.getConnection();
+    }
+
+    public static String listToString(final List<String> list) {
+        if (list == null || list.isEmpty()) {
+            return "";
+        }
+        return String.join(",", list);
+    }
+
+    public static List<String> stringToList(final String str) {
+        if (str == null || str.isEmpty()) {
+            return List.of();
+        }
+        return Arrays.asList(str.split(","));
     }
 }
