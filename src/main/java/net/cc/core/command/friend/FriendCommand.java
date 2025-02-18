@@ -60,7 +60,9 @@ public final class FriendCommand {
             final CorePlayer source = playerManager.getPlayer(player);
             final CorePlayer target = context.getArgument("player", CorePlayer.class);
 
-            if (source.getFriends().contains(target.getMojangId())) {
+            if (source.equals(target)) {
+                player.sendMessage(Component.text("You cannot add yourself as a friend.", NamedTextColor.RED));
+            } else if (source.isFriend(target.getMojangId())) {
                 player.sendMessage(Component.text(target.getUsername() + " is already a friend.", NamedTextColor.RED));
             } else {
                 source.addFriend(target.getMojangId());
@@ -84,7 +86,7 @@ public final class FriendCommand {
             final CorePlayer source = playerManager.getPlayer(player);
             final CorePlayer target = context.getArgument("player", CorePlayer.class);
 
-            if (source.getFriends().contains(target.getMojangId())) {
+            if (!(source.isFriend(target.getMojangId()))) {
                 player.sendMessage(Component.text(target.getUsername() + " is not a friend.", NamedTextColor.RED));
             } else {
                 source.removeFriend(target.getMojangId());
@@ -103,14 +105,15 @@ public final class FriendCommand {
             final CorePlayer source = playerManager.getPlayer(player);
             final List<String> friends = new ArrayList<>();
 
-            for (final UUID mojangId : source.getFriends()) {
+            for (final String friendString : source.getFriends().split(",")) {
+                final UUID mojangId = UUID.fromString(friendString.replace(",", ""));
                 final CorePlayer friend = playerManager.getPlayer(mojangId);
                 if (friend != null) {
                     friends.add(friend.getUsername());
                 }
             }
 
-            final int count = source.getFriends().size();
+            final int count = source.getFriends().split(",").length;
             final String list = StringUtils.join(friends, ", ");
             final Component component = Component.text("Friends [" + count + "]: " + list, NamedTextColor.GOLD);
             player.sendMessage(component);

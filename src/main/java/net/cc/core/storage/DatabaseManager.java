@@ -9,12 +9,9 @@ import net.cc.core.player.CorePlayer;
 import net.cc.core.storage.query.CorePlayerQuery;
 
 import java.sql.*;
-import java.util.Arrays;
-import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.logging.Logger;
-import java.util.stream.Collectors;
 
 public final class DatabaseManager {
 
@@ -60,19 +57,21 @@ public final class DatabaseManager {
         return CompletableFuture.runAsync(() -> {
             try (Connection connection = getConnection()) {
                 final PreparedStatement statement = connection.prepareStatement("INSERT INTO " + PLAYERS_TABLE + " (id, username, display_name, nickname, vanished, friends) VALUES (?, ?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE username = ?, display_name = ?, nickname = ?, vanished = ?, friends = ?;");
+
                 // insert
                 statement.setString(1, corePlayer.getMojangId().toString());
                 statement.setString(2, corePlayer.getUsername());
                 statement.setString(3, corePlayer.getDisplayName());
                 statement.setString(4, corePlayer.getNickname());
                 statement.setBoolean(5, corePlayer.isVanished());
-                statement.setString(6, listToDelimitedString(corePlayer.getFriends()));
+                statement.setString(6, corePlayer.getFriends());
                 // update
                 statement.setString(7, corePlayer.getUsername());
                 statement.setString(8, corePlayer.getDisplayName());
                 statement.setString(9, corePlayer.getNickname());
                 statement.setBoolean(10, corePlayer.isVanished());
-                statement.setString(11, listToDelimitedString(corePlayer.getFriends()));
+                statement.setString(11, corePlayer.getFriends());
+                statement.execute();
             } catch (SQLException e) {
                 logger.severe("Error saving core player: " + e.getMessage());
             }
@@ -98,7 +97,7 @@ public final class DatabaseManager {
                     final String displayName = resultSet.getString("display_name");
                     final String nickname = resultSet.getString("nickname");
                     final boolean vanished = resultSet.getBoolean("vanished");
-                    final List<UUID> friends = stringToList(resultSet.getString("friends"));
+                    final String friends = resultSet.getString("friends");
 
                     query.addResult(new CorePlayer(mojangId, username, displayName, nickname, vanished, friends));
                 }
@@ -117,17 +116,5 @@ public final class DatabaseManager {
 
     private Connection getConnection() throws SQLException {
         return dataSource.getConnection();
-    }
-
-    public String listToDelimitedString(List<UUID> uuidList) {
-        return uuidList.stream()
-                .map(UUID::toString)
-                .collect(Collectors.joining(","));
-    }
-
-    public List<UUID> stringToList(String uuidString) {
-        return Arrays.stream(uuidString.split(","))
-                .map(UUID::fromString)
-                .collect(Collectors.toList());
     }
 }

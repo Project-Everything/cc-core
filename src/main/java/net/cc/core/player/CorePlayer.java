@@ -1,8 +1,9 @@
 package net.cc.core.player;
 
+import org.apache.commons.lang3.StringUtils;
 import org.bukkit.entity.Player;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
@@ -13,7 +14,7 @@ public class CorePlayer {
     private String displayName;
     private String nickname;
     private boolean vanished;
-    private List<UUID> friends;
+    private String friends;
 
     public CorePlayer(
             final Player player
@@ -23,7 +24,7 @@ public class CorePlayer {
         displayName = "<gray>" + player.getName() + "</gray>";
         nickname = "";
         vanished = false;
-        friends = new ArrayList<>();
+        friends = "";
     }
 
     public CorePlayer(
@@ -32,7 +33,7 @@ public class CorePlayer {
             final String displayName,
             final String nickname,
             final boolean vanished,
-            final List<UUID> friends
+            final String friends
     ) {
         this.mojangId = mojangId;
         this.username = username;
@@ -78,19 +79,24 @@ public class CorePlayer {
         this.vanished = vanished;
     }
 
-    public List<UUID> getFriends() {
+    public String getFriends() {
         return friends;
     }
 
-    public void setFriends(final List<UUID> friends) {
+    public void setFriends(final String friends) {
         this.friends = friends;
     }
 
     public void addFriend(final UUID mojangId) {
-        this.friends.add(mojangId);
+        this.friends = StringUtils.appendIfMissing(this.friends, "," + mojangId.toString());
     }
 
     public void removeFriend(final UUID mojangId) {
-        this.friends.remove(mojangId);
+        this.friends = StringUtils.remove(this.friends, "," + mojangId.toString());
+    }
+
+    public boolean isFriend(final UUID mojangId) {
+        List<String> friends = Arrays.stream(this.friends.split(",")).toList();
+        return friends.contains(mojangId.toString());
     }
 }
