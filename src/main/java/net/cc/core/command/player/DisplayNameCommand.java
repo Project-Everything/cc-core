@@ -38,6 +38,7 @@ public final class DisplayNameCommand {
         commands.register(node, "Set your display name", List.of("name"));
     }
 
+    // Method for executing /displayname
     private int view(final CommandContext<CommandSourceStack> ctx) {
         final Player player = (Player) ctx.getSource().getSender();
         final CorePlayer weavePlayer = plugin.getCorePlayerManager().getPlayer(player);
@@ -49,6 +50,7 @@ public final class DisplayNameCommand {
         return Command.SINGLE_SUCCESS;
     }
 
+    // Method for executing /displayname {value}
     private int set(final CommandContext<CommandSourceStack> ctx) {
         final Player player = (Player) ctx.getSource().getSender();
         final CorePlayer corePlayer = plugin.getCorePlayerManager().getPlayer(player);
@@ -60,7 +62,7 @@ public final class DisplayNameCommand {
 
             if (player.getName().equals(rawDisplayName)) {
                 corePlayer.setDisplayName(displayName);
-                player.sendMessage(mm.deserialize("<gold>Display name has been set to</gold> " + displayName + "<reset><gold>.</gold>"));
+                player.sendMessage(mm.deserialize("<gold>Display name has been set to </gold>" + displayName + "<reset><gold>.</gold>"));
                 plugin.getCorePlayerManager().updatePlayer(corePlayer);
             } else {
                 player.sendMessage(mm.deserialize("<red>Display name does not match your player name</red>"));
@@ -69,6 +71,7 @@ public final class DisplayNameCommand {
         return Command.SINGLE_SUCCESS;
     }
 
+    // Method for executing /displayname reset
     private int reset(final CommandContext<CommandSourceStack> ctx) {
         final Player player = (Player) ctx.getSource().getSender();
         final CorePlayer corePlayer = plugin.getCorePlayerManager().getPlayer(player);
