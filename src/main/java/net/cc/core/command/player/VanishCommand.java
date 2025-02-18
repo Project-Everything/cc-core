@@ -20,6 +20,7 @@ public final class VanishCommand {
     private final CorePlugin plugin;
     private final MiniMessage mm;
 
+    // Constructor
     public VanishCommand(final CorePlugin plugin, Commands commands) {
         this.plugin = plugin;
         this.mm = MiniMessage.miniMessage();
@@ -28,7 +29,6 @@ public final class VanishCommand {
                 .requires(stack -> stack.getSender().hasPermission(CoreUtils.PERMISSION_COMMAND_VANISH))
                 .executes(this::execute0)
                 .build();
-
         commands.register(node, "Toggle vanish", List.of("v"));
     }
 

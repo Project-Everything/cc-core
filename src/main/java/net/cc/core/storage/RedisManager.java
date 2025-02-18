@@ -16,12 +16,14 @@ public final class RedisManager {
     private final ConfigManager config;
     private JedisPool pool;
 
+    // Constructor
     public RedisManager(final CorePlugin plugin) {
         this.config = plugin.getConfigManager();
 
         init();
     }
 
+    // Method to init the Jedis connection pool using the Redis settings from the config
     private void init() {
         final RedisSettings settings = config.getRedisSettings();
         final JedisPoolConfig poolConfig = new JedisPoolConfig();
@@ -36,6 +38,7 @@ public final class RedisManager {
         pool = new JedisPool(poolConfig, settings.getHost(), settings.getPort(), 0, settings.getPassword());
     }
 
+    // Method to set a key-value pair in Redis with an optional expiration time
     public void set(final String key, final String value, final int expire) {
         try (Jedis jedis = pool.getResource()) {
             jedis.set(key, value);
@@ -45,12 +48,14 @@ public final class RedisManager {
         }
     }
 
+    // Method to retrieve a value from a key-value pair in Redis
     public String get(final String key) {
         try (Jedis jedis = pool.getResource()) {
             return jedis.get(key);
         }
     }
 
+    // Method to retrieve a list of values matching a key pattern
     public List<String> getValues(final String key) {
         try (Jedis jedis = pool.getResource()) {
             final ScanResult<String> scanResult = jedis.scan("0", new ScanParams().match(key));
@@ -58,6 +63,7 @@ public final class RedisManager {
         }
     }
 
+    // Close the Jedis connection pool
     public void close() {
         pool.close();
     }

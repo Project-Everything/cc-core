@@ -25,6 +25,7 @@ public final class FriendCommand {
     private final CorePlugin plugin;
     private final CorePlayerManager playerManager;
 
+    // Constructor
     public FriendCommand(final CorePlugin plugin, final Commands registrar) {
         this.plugin = plugin;
         this.playerManager = plugin.getCorePlayerManager();

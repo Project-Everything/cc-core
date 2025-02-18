@@ -11,6 +11,7 @@ public final class UpdateVanishTask implements Runnable {
 
     private final CorePlugin plugin;
 
+    // Constructor
     public UpdateVanishTask(final CorePlugin plugin) {
         this.plugin = plugin;
     }

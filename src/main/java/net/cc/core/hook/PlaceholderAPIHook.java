@@ -10,6 +10,7 @@ public final class PlaceholderAPIHook extends PlaceholderExpansion {
 
     private final CorePlugin plugin;
 
+    // Constructor
     public PlaceholderAPIHook(final CorePlugin plugin) {
         this.plugin = plugin;
     }

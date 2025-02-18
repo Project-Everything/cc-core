@@ -15,6 +15,7 @@ public class CorePlayer {
     private boolean vanished;
     private List<String> friends;
 
+    // New CorePlayer
     public CorePlayer(
             final Player player
     ) {
@@ -26,6 +27,7 @@ public class CorePlayer {
         friends = new ArrayList<>();
     }
 
+    // Existing CorePlayer
     public CorePlayer(
             final UUID mojangId,
             final String username,

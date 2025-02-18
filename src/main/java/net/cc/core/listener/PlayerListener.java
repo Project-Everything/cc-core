@@ -14,6 +14,7 @@ public final class PlayerListener implements Listener {
 
     private final CorePlugin plugin;
 
+    // Constructor
     public PlayerListener(final CorePlugin plugin) {
         this.plugin = plugin;
         plugin.getServer().getPluginManager().registerEvents(this, plugin);

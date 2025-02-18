@@ -7,6 +7,7 @@ public class Query<T> {
 
     private final List<T> results;
 
+    // Constructor
     public Query() {
         results = new ArrayList<>();
     }

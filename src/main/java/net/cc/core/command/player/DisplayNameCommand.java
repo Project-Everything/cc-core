@@ -21,6 +21,7 @@ public final class DisplayNameCommand {
     private final CorePlugin plugin;
     private final MiniMessage mm;
 
+    // Constructor
     public DisplayNameCommand(final CorePlugin plugin, Commands commands) {
         this.plugin = plugin;
         this.mm = MiniMessage.miniMessage();

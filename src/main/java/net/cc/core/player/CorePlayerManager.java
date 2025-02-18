@@ -15,12 +15,14 @@ public final class CorePlayerManager {
     private final RedisManager redis;
     private final List<CorePlayer> all;
 
+    // Constructor
     public CorePlayerManager(final CorePlugin plugin) {
         this.plugin = plugin;
         this.redis = plugin.getRedisHandler();
         this.all = new ArrayList<>();
     }
 
+    // Method to load a CorePlayer from the database and store in Redis
     public CorePlayer loadPlayer(final Player player) {
         final CorePlayer current = getPlayer(player);
         if (current != null) {
@@ -47,10 +49,12 @@ public final class CorePlayerManager {
         return corePlayer;
     }
 
+    // Get a CorePlayer from Bukkit Player object
     public CorePlayer getPlayer(final Player player) {
         return getPlayer(player.getUniqueId());
     }
 
+    // Get a CorePlayer from UUID
     public CorePlayer getPlayer(final UUID mojangId) {
         final String key = "core:players:" + mojangId.toString();
         final String value = redis.get(key);
@@ -63,6 +67,7 @@ public final class CorePlayerManager {
         return gson.fromJson(value, CorePlayer.class);
     }
 
+    // Get a CorePlayer from Name (only use if desperate)
     public CorePlayer getPlayer(final String name) {
         for (final CorePlayer corePlayer : all) {
             if (corePlayer.getUsername().equals(name)) {
@@ -72,10 +77,12 @@ public final class CorePlayerManager {
         return null;
     }
 
+    // Method to get a list of all CorePlayer instances
     public List<CorePlayer> getPlayers() {
         return all;
     }
 
+    // Method to update a CorePlayer in Redis
     public void updatePlayer(final CorePlayer corePlayer) {
         final String key = "core:players:" + corePlayer.getMojangId().toString();
 
@@ -85,6 +92,7 @@ public final class CorePlayerManager {
         redis.set(key, json, 5);
     }
 
+    // Method to sync the list of all CorePlayer instances
     public void syncPlayerList(final List<CorePlayer> players) {
         all.clear();
         all.addAll(players);

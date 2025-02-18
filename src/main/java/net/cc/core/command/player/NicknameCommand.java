@@ -19,6 +19,7 @@ public final class NicknameCommand {
     private final CorePlugin plugin;
     private final MiniMessage mm;
 
+    // Constructor
     public NicknameCommand(final CorePlugin plugin, Commands commands) {
         this.plugin = plugin;
         this.mm = MiniMessage.miniMessage();

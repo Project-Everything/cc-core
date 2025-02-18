@@ -22,6 +22,7 @@ public final class DatabaseManager {
     private final ConfigManager config;
     private HikariDataSource dataSource;
 
+    // Constructor
     public DatabaseManager(final CorePlugin plugin) {
         this.logger = plugin.getLogger();
         this.config = plugin.getConfigManager();
@@ -30,6 +31,7 @@ public final class DatabaseManager {
         createTables();
     }
 
+    // Method to init the HikariCP data source using the database settings from the config
     private void init() {
         final DatabaseSettings settings = config.getDatabaseSettings();
         final HikariConfig hikariConfig = new HikariConfig();
@@ -45,6 +47,7 @@ public final class DatabaseManager {
         dataSource = new HikariDataSource(hikariConfig);
     }
 
+    // Creates the necessary database tables if they do not exist
     private void createTables() {
         try (Connection connection = getConnection()) {
             Statement statement = connection.createStatement();
@@ -55,24 +58,26 @@ public final class DatabaseManager {
         }
     }
 
-    public CompletableFuture<Void> saveCorePlayer(final CorePlayer corePlayer) {
-        return CompletableFuture.runAsync(() -> {
+    // Asynchronous method to save a CorePlayer to the database
+    public void saveCorePlayer(final CorePlayer corePlayer) {
+        CompletableFuture.runAsync(() -> {
             try (Connection connection = getConnection()) {
                 final PreparedStatement statement = connection.prepareStatement("INSERT INTO " + PLAYERS_TABLE + " (id, username, display_name, nickname, vanished, friends) VALUES (?, ?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE username = ?, display_name = ?, nickname = ?, vanished = ?, friends = ?;");
 
-                // insert
+                // Insert values if missing
                 statement.setString(1, corePlayer.getMojangId().toString());
                 statement.setString(2, corePlayer.getUsername());
                 statement.setString(3, corePlayer.getDisplayName());
                 statement.setString(4, corePlayer.getNickname());
                 statement.setBoolean(5, corePlayer.isVanished());
                 statement.setString(6, listToString(corePlayer.getFriends()));
-                // update
+                // Update existing values
                 statement.setString(7, corePlayer.getUsername());
                 statement.setString(8, corePlayer.getDisplayName());
                 statement.setString(9, corePlayer.getNickname());
                 statement.setBoolean(10, corePlayer.isVanished());
                 statement.setString(11, listToString(corePlayer.getFriends()));
+
                 statement.execute();
             } catch (SQLException e) {
                 logger.severe("Error saving core player: " + e.getMessage());
@@ -80,6 +85,7 @@ public final class DatabaseManager {
         });
     }
 
+    // Asynchronous method to query a CorePlayer from the database
     public CompletableFuture<CorePlayerQuery> queryCorePlayer(final UUID id) {
         return CompletableFuture.supplyAsync(() -> {
             final CorePlayerQuery query = new CorePlayerQuery();
@@ -110,16 +116,19 @@ public final class DatabaseManager {
         });
     }
 
+    // Close the data source
     public void close() {
         if (dataSource != null) {
             dataSource.close();
         }
     }
 
+    // Retrieves a database connection from the data source
     private Connection getConnection() throws SQLException {
         return dataSource.getConnection();
     }
 
+    // List to String conversion with null handling
     public static String listToString(final List<String> list) {
         if (list == null || list.isEmpty()) {
             return "";
@@ -127,6 +136,7 @@ public final class DatabaseManager {
         return String.join(",", list);
     }
 
+    // String to List conversion with null handling
     public static List<String> stringToList(final String str) {
         if (str == null || str.isEmpty()) {
             return List.of();

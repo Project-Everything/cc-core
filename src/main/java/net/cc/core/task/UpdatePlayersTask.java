@@ -8,6 +8,7 @@ public final class UpdatePlayersTask implements Runnable {
 
     private final CorePlugin plugin;
 
+    // Constructor
     public UpdatePlayersTask(final CorePlugin plugin) {
         this.plugin = plugin;
     }

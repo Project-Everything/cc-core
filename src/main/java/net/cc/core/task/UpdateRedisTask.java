@@ -14,6 +14,7 @@ public final class UpdateRedisTask implements Runnable {
     private final CorePlugin plugin;
     private final RedisManager redis;
 
+    // Constructor
     public UpdateRedisTask(final CorePlugin plugin) {
         this.plugin = plugin;
         this.redis = plugin.getRedisHandler();
