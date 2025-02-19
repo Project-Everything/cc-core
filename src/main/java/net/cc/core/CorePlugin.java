@@ -6,7 +6,6 @@ import net.cc.core.command.friend.FriendCommand;
 import net.cc.core.command.misc.MeowCommand;
 import net.cc.core.command.player.DisplayNameCommand;
 import net.cc.core.command.player.NicknameCommand;
-import net.cc.core.command.player.VanishCommand;
 import net.cc.core.config.ConfigManager;
 import net.cc.core.hook.PlaceholderAPIHook;
 import net.cc.core.task.*;
@@ -90,7 +89,6 @@ public final class CorePlugin extends JavaPlugin {
             new FriendCommand(this, commands);
             new MeowCommand(this, commands);
             new NicknameCommand(this, commands);
-            new VanishCommand(this, commands);
         });
     }
 
@@ -101,7 +99,6 @@ public final class CorePlugin extends JavaPlugin {
     private void registerTasks() {
         final BukkitScheduler scheduler = getServer().getScheduler();
         scheduler.runTaskTimer(this, new UpdatePlayersTask(this), 60000L, 60000L); // update every minute
-        scheduler.runTaskTimer(this, new UpdateVanishTask(this), 10L, 10L); // update every 10ms
         scheduler.runTaskTimer(this, new UpdateRedisTask(this), 10L, 10L); // update every 10ms
     }
 }

@@ -38,7 +38,6 @@ public final class CorePlayerManager {
                 corePlayer.setUsername(existing.getUsername());
                 corePlayer.setDisplayName(existing.getDisplayName());
                 corePlayer.setNickname(existing.getNickname());
-                corePlayer.setVanished(existing.isVanished());
                 corePlayer.setFriends(existing.getFriends());
             } else {
                 plugin.getDatabaseManager().saveCorePlayer(corePlayer);

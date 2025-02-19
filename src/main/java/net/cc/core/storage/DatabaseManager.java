@@ -51,7 +51,7 @@ public final class DatabaseManager {
     private void createTables() {
         try (Connection connection = getConnection()) {
             Statement statement = connection.createStatement();
-            statement.addBatch("CREATE TABLE IF NOT EXISTS " + PLAYERS_TABLE + " (id VARCHAR(36) PRIMARY KEY, username VARCHAR(16), display_name VARCHAR(128), nickname VARCHAR(64), vanished BOOLEAN, friends TEXT);");
+            statement.addBatch("CREATE TABLE IF NOT EXISTS " + PLAYERS_TABLE + " (id VARCHAR(36) PRIMARY KEY, username VARCHAR(16), display_name VARCHAR(128), nickname VARCHAR(64), friends TEXT);");
             statement.executeBatch();
         } catch (SQLException e) {
             logger.severe("Error creating tables: " + e.getMessage());
@@ -62,21 +62,20 @@ public final class DatabaseManager {
     public void saveCorePlayer(final CorePlayer corePlayer) {
         CompletableFuture.runAsync(() -> {
             try (Connection connection = getConnection()) {
-                final PreparedStatement statement = connection.prepareStatement("INSERT INTO " + PLAYERS_TABLE + " (id, username, display_name, nickname, vanished, friends) VALUES (?, ?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE username = ?, display_name = ?, nickname = ?, vanished = ?, friends = ?;");
+                final PreparedStatement statement = connection.prepareStatement("INSERT INTO " + PLAYERS_TABLE + " (id, username, display_name, nickname, friends) VALUES (?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE username = ?, display_name = ?, nickname = ?, friends = ?;");
 
                 // Insert values if missing
                 statement.setString(1, corePlayer.getMojangId().toString());
                 statement.setString(2, corePlayer.getUsername());
                 statement.setString(3, corePlayer.getDisplayName());
                 statement.setString(4, corePlayer.getNickname());
-                statement.setBoolean(5, corePlayer.isVanished());
-                statement.setString(6, listToString(corePlayer.getFriends()));
+                statement.setString(5, listToString(corePlayer.getFriends()));
+
                 // Update existing values
-                statement.setString(7, corePlayer.getUsername());
-                statement.setString(8, corePlayer.getDisplayName());
-                statement.setString(9, corePlayer.getNickname());
-                statement.setBoolean(10, corePlayer.isVanished());
-                statement.setString(11, listToString(corePlayer.getFriends()));
+                statement.setString(6, corePlayer.getUsername());
+                statement.setString(7, corePlayer.getDisplayName());
+                statement.setString(8, corePlayer.getNickname());
+                statement.setString(9, listToString(corePlayer.getFriends()));
 
                 statement.execute();
             } catch (SQLException e) {
@@ -104,10 +103,9 @@ public final class DatabaseManager {
                     final String username = resultSet.getString("username");
                     final String displayName = resultSet.getString("display_name");
                     final String nickname = resultSet.getString("nickname");
-                    final boolean vanished = resultSet.getBoolean("vanished");
                     final List<String> friends = stringToList(resultSet.getString("friends"));
 
-                    query.addResult(new CorePlayer(mojangId, username, displayName, nickname, vanished, friends));
+                    query.addResult(new CorePlayer(mojangId, username, displayName, nickname, friends));
                 }
             } catch (SQLException e) {
                 logger.severe("Error querying core player: " + e.getMessage());

@@ -12,7 +12,6 @@ public class CorePlayer {
     private String username;
     private String displayName;
     private String nickname;
-    private boolean vanished;
     private List<String> friends;
 
     // New CorePlayer
@@ -23,7 +22,6 @@ public class CorePlayer {
         username = player.getName();
         displayName = "<gray>" + player.getName() + "</gray>";
         nickname = "";
-        vanished = false;
         friends = new ArrayList<>();
     }
 
@@ -33,14 +31,12 @@ public class CorePlayer {
             final String username,
             final String displayName,
             final String nickname,
-            final boolean vanished,
             final List<String> friends
     ) {
         this.mojangId = mojangId;
         this.username = username;
         this.displayName = displayName;
         this.nickname = nickname;
-        this.vanished = vanished;
         this.friends = friends;
     }
 
@@ -70,14 +66,6 @@ public class CorePlayer {
 
     public void setNickname(final String nickname) {
         this.nickname = nickname;
-    }
-
-    public boolean isVanished() {
-        return vanished;
-    }
-
-    public void setVanished(final boolean vanished) {
-        this.vanished = vanished;
     }
 
     public List<String> getFriends() {
