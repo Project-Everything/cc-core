@@ -6,6 +6,7 @@ import lombok.Getter;
 import net.cc.core.command.FriendCommand;
 import net.cc.core.command.DisplayNameCommand;
 import net.cc.core.command.NicknameCommand;
+import net.cc.core.command.VanishCommand;
 import net.cc.core.config.ConfigManager;
 import net.cc.core.hook.PlaceholderAPIHook;
 import net.cc.core.task.*;
@@ -73,6 +74,7 @@ public final class CorePlugin extends JavaPlugin {
             new DisplayNameCommand(this, commands);
             new FriendCommand(this, commands);
             new NicknameCommand(this, commands);
+            new VanishCommand(this, commands);
         });
     }
 
@@ -84,5 +86,6 @@ public final class CorePlugin extends JavaPlugin {
         BukkitScheduler scheduler = getServer().getScheduler();
         scheduler.runTaskTimer(this, new SaveCorePlayerTask(this), 60000L, 60000L); // update every minute
         scheduler.runTaskTimer(this, new UpdateRedisTask(this), 10L, 10L); // update every 10ms
+        scheduler.runTaskTimer(this, new UpdateVanishTask(this), 10L, 10L); // update every 10ms
     }
 }

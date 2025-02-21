@@ -7,7 +7,7 @@ import io.papermc.paper.command.brigadier.CommandSourceStack;
 import io.papermc.paper.command.brigadier.Commands;
 import net.cc.core.CorePlugin;
 import net.cc.core.player.CorePlayer;
-import net.cc.core.util.CoreUtils;
+import net.cc.core.CoreUtils;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.entity.Player;
 

@@ -8,7 +8,7 @@ import net.cc.core.CorePlugin;
 import net.cc.core.command.argument.CorePlayerArgumentType;
 import net.cc.core.player.CorePlayer;
 import net.cc.core.player.CorePlayerManager;
-import net.cc.core.util.CoreUtils;
+import net.cc.core.CoreUtils;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.apache.commons.lang3.StringUtils;
