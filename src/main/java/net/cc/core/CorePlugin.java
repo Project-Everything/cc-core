@@ -83,7 +83,7 @@ public final class CorePlugin extends JavaPlugin {
 
     private void registerCommands() {
         getLifecycleManager().registerEventHandler(LifecycleEvents.COMMANDS, event -> {
-            final Commands commands = event.registrar();
+            Commands commands = event.registrar();
 
             new DisplayNameCommand(this, commands);
             new FriendCommand(this, commands);
@@ -96,7 +96,7 @@ public final class CorePlugin extends JavaPlugin {
     }
 
     private void registerTasks() {
-        final BukkitScheduler scheduler = getServer().getScheduler();
+        BukkitScheduler scheduler = getServer().getScheduler();
         scheduler.runTaskTimer(this, new SaveCorePlayerTask(this), 60000L, 60000L); // update every minute
         scheduler.runTaskTimer(this, new UpdateRedisTask(this), 10L, 10L); // update every 10ms
     }

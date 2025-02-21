@@ -28,11 +28,11 @@ public final class PlayerListener implements Listener {
     public void onPlayerJoin(final PlayerJoinEvent event) {
         event.joinMessage(null);
 
-        final Player player = event.getPlayer();
-        final CorePlayer corePlayer = plugin.getCorePlayerManager().loadPlayer(player);
+        Player player = event.getPlayer();
+        CorePlayer corePlayer = plugin.getCorePlayerManager().loadPlayer(player);
 
         if (!vanishAPI.isVanished(player.getUniqueId())) {
-            final Component component = Component.text("++ " + player.getName(), NamedTextColor.GREEN);
+            Component component = Component.text("++ " + player.getName(), NamedTextColor.GREEN);
             plugin.getServer().broadcast(component);
         }
     }
@@ -41,11 +41,11 @@ public final class PlayerListener implements Listener {
     public void onPlayerQuit(final PlayerQuitEvent event) {
         event.quitMessage(null);
 
-        final Player player = event.getPlayer();
-        final CorePlayer corePlayer = plugin.getCorePlayerManager().getPlayer(player);
+        Player player = event.getPlayer();
+        CorePlayer corePlayer = plugin.getCorePlayerManager().getPlayer(player);
 
         if (!vanishAPI.isVanished(player.getUniqueId())) {
-            final Component component = Component.text("-- " + player.getName(), NamedTextColor.RED);
+            Component component = Component.text("-- " + player.getName(), NamedTextColor.RED);
             plugin.getServer().broadcast(component);
         }
 

@@ -17,7 +17,7 @@ public final class RedisManager {
     private JedisPool pool;
 
     // Constructor
-    public RedisManager(final CorePlugin plugin) {
+    public RedisManager(CorePlugin plugin) {
         this.config = plugin.getConfigManager();
 
         init();
@@ -25,8 +25,8 @@ public final class RedisManager {
 
     // Method to init the Jedis connection pool using the Redis settings from the config
     private void init() {
-        final RedisSettings settings = config.getRedisSettings();
-        final JedisPoolConfig poolConfig = new JedisPoolConfig();
+        RedisSettings settings = config.getRedisSettings();
+        JedisPoolConfig poolConfig = new JedisPoolConfig();
 
         poolConfig.setMaxTotal(128);
         poolConfig.setMaxIdle(128);
@@ -39,7 +39,7 @@ public final class RedisManager {
     }
 
     // Method to set a key-value pair in Redis with an optional expiration time
-    public void set(final String key, final String value, final int expire) {
+    public void set(String key, String value, int expire) {
         try (Jedis jedis = pool.getResource()) {
             jedis.set(key, value);
             if (expire > 0) {
@@ -49,16 +49,16 @@ public final class RedisManager {
     }
 
     // Method to retrieve a value from a key-value pair in Redis
-    public String get(final String key) {
+    public String get(String key) {
         try (Jedis jedis = pool.getResource()) {
             return jedis.get(key);
         }
     }
 
     // Method to retrieve a list of values matching a key pattern
-    public List<String> getValues(final String key) {
+    public List<String> getValues(String key) {
         try (Jedis jedis = pool.getResource()) {
-            final ScanResult<String> scanResult = jedis.scan("0", new ScanParams().match(key));
+            ScanResult<String> scanResult = jedis.scan("0", new ScanParams().match(key));
             return scanResult.getResult();
         }
     }

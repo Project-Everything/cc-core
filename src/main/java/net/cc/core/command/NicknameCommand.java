@@ -38,11 +38,11 @@ public final class NicknameCommand {
 
     // Method for executing /nickname
     private int view(final CommandContext<CommandSourceStack> ctx) {
-        final Player player = (Player) ctx.getSource().getSender();
-        final CorePlayer corePlayer = plugin.getCorePlayerManager().getPlayer(player);
+        Player player = (Player) ctx.getSource().getSender();
+        CorePlayer corePlayer = plugin.getCorePlayerManager().getPlayer(player);
 
         if (corePlayer != null) {
-            final String nickname = corePlayer.getNickname();
+            String nickname = corePlayer.getNickname();
             if (!nickname.isEmpty()) {
                 player.sendMessage(mm.deserialize("<gold>Your current nickname is: </gold>" + nickname + "<reset><gold>.\nSet your nickname with /nickname <nickname>.</gold>"));
             } else {

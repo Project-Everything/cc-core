@@ -30,8 +30,8 @@ public final class DatabaseManager {
 
     // Method to create the HikariCP data source (connection to SQL database)
     private void init() {
-        final DatabaseSettings settings = config.getDatabaseSettings();
-        final HikariConfig hikariConfig = new HikariConfig();
+        DatabaseSettings settings = config.getDatabaseSettings();
+        HikariConfig hikariConfig = new HikariConfig();
 
         hikariConfig.setJdbcUrl("jdbc:mysql://" + settings.getHost() + ":" + settings.getPort() + "/" + settings.getDatabase());
         hikariConfig.setUsername(settings.getUsername());
@@ -56,7 +56,7 @@ public final class DatabaseManager {
     }
 
     // Asynchronous method to save a CorePlayer to the database
-    public void saveCorePlayer(final CorePlayer corePlayer) {
+    public void saveCorePlayer(CorePlayer corePlayer) {
         CompletableFuture.runAsync(() -> {
             try (Connection connection = getConnection()) {
                 final PreparedStatement statement = connection.prepareStatement("INSERT INTO " + PLAYERS_TABLE + " (id, username, display_name, nickname, friends) VALUES (?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE username = ?, display_name = ?, nickname = ?, friends = ?;");
@@ -82,13 +82,13 @@ public final class DatabaseManager {
     }
 
     // Asynchronous method to get a CorePlayer from the database
-    public CompletableFuture<CorePlayer> queryCorePlayer(final UUID id) {
+    public CompletableFuture<CorePlayer> queryCorePlayer(UUID id) {
         return CompletableFuture.supplyAsync(() -> {
             try (Connection connection = getConnection()) {
                 PreparedStatement statement = connection.prepareStatement("SELECT * FROM " + PLAYERS_TABLE + " WHERE id = ?");
                 statement.setString(1, id.toString());
 
-                final ResultSet resultSet = statement.executeQuery();
+                ResultSet resultSet = statement.executeQuery();
                 if (resultSet.next()) {
                     return getPlayerResult(resultSet);
                 }
@@ -106,7 +106,7 @@ public final class DatabaseManager {
                 Set<CorePlayer> corePlayers = new HashSet<>();
                 PreparedStatement statement = connection.prepareStatement("SELECT * FROM " + PLAYERS_TABLE + ";");
 
-                final ResultSet resultSet = statement.executeQuery();
+                ResultSet resultSet = statement.executeQuery();
                 if (resultSet.next()) {
                     corePlayers.add(getPlayerResult(resultSet));
                 }
@@ -119,11 +119,11 @@ public final class DatabaseManager {
     }
 
     private CorePlayer getPlayerResult(ResultSet resultSet) throws SQLException {
-        final UUID mojangId = UUID.fromString(resultSet.getString("id"));
-        final String username = resultSet.getString("username");
-        final String displayName = resultSet.getString("display_name");
-        final String nickname = resultSet.getString("nickname");
-        final List<String> friends = stringToList(resultSet.getString("friends"));
+        UUID mojangId = UUID.fromString(resultSet.getString("id"));
+        String username = resultSet.getString("username");
+        String displayName = resultSet.getString("display_name");
+        String nickname = resultSet.getString("nickname");
+        List<String> friends = stringToList(resultSet.getString("friends"));
 
         return new CorePlayer(mojangId, username, displayName, nickname, friends);
     }
@@ -141,7 +141,7 @@ public final class DatabaseManager {
     }
 
     // List to String conversion with null handling
-    public static String listToString(final List<String> list) {
+    public static String listToString(List<String> list) {
         if (list == null || list.isEmpty()) {
             return "";
         }
@@ -149,7 +149,7 @@ public final class DatabaseManager {
     }
 
     // String to List conversion with null handling
-    public static List<String> stringToList(final String str) {
+    public static List<String> stringToList(String str) {
         if (str == null || str.isEmpty()) {
             return List.of();
         }

@@ -24,7 +24,7 @@ public final class HexColorArgumentType implements CustomArgumentType<TextColor,
 
     @Override
     public TextColor parse(StringReader reader) throws CommandSyntaxException {
-        final int start = reader.getCursor();
+        int start = reader.getCursor();
         while (reader.canRead() && !Character.isWhitespace(reader.peek())) {
             reader.skip();
         }

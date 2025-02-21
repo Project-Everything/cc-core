@@ -15,7 +15,7 @@ public final class UpdateRedisTask implements Runnable {
     private final RedisManager redis;
 
     // Constructor
-    public UpdateRedisTask(final CorePlugin plugin) {
+    public UpdateRedisTask(CorePlugin plugin) {
         this.plugin = plugin;
         this.redis = plugin.getRedisHandler();
     }
@@ -29,13 +29,13 @@ public final class UpdateRedisTask implements Runnable {
             }
         }
 
-        final List<CorePlayer> players = new ArrayList<>();
-        final List<String> keys = redis.getValues("core:players:*");
+        List<CorePlayer> players = new ArrayList<>();
+        List<String> keys = redis.getValues("core:players:*");
 
         for (String key : keys) {
-            final String value = redis.get(key);
+            String value = redis.get(key);
             if (value != null) {
-                final Gson gson = new Gson();
+                Gson gson = new Gson();
                 players.add(gson.fromJson(value, CorePlayer.class));
             }
         }

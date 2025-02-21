@@ -34,7 +34,7 @@ public final class FriendCommand {
                 .requires(stack -> stack.getSender().hasPermission(CoreUtils.PERMISSION_COMMAND_FRIEND))
                 .then(Commands.literal("add")
                         .executes(context -> {
-                            final CommandSender sender = context.getSource().getSender();
+                            CommandSender sender = context.getSource().getSender();
                             sender.sendMessage(Component.text("/" + context.getInput() + " <player>", NamedTextColor.RED));
                             return Command.SINGLE_SUCCESS;
                         })
@@ -42,7 +42,7 @@ public final class FriendCommand {
                                 .executes(this::add)))
                 .then(Commands.literal("remove")
                         .executes(context -> {
-                            final CommandSender sender = context.getSource().getSender();
+                            CommandSender sender = context.getSource().getSender();
                             sender.sendMessage(Component.text("/" + context.getInput() + " <player>", NamedTextColor.RED));
                             return Command.SINGLE_SUCCESS;
                         })
@@ -56,11 +56,11 @@ public final class FriendCommand {
     }
 
     // Method for executing /friend add
-    public int add(final CommandContext<CommandSourceStack> context) {
-        final CommandSender sender = context.getSource().getSender();
+    public int add(CommandContext<CommandSourceStack> context) {
+        CommandSender sender = context.getSource().getSender();
         if (sender instanceof Player player) {
-            final CorePlayer source = playerManager.getPlayer(player);
-            final CorePlayer target = context.getArgument("player", CorePlayer.class);
+            CorePlayer source = playerManager.getPlayer(player);
+            CorePlayer target = context.getArgument("player", CorePlayer.class);
 
             if (source.equals(target)) {
                 player.sendMessage(Component.text("You cannot add yourself as a friend.", NamedTextColor.RED));
@@ -71,9 +71,8 @@ public final class FriendCommand {
                 playerManager.updatePlayer(source);
                 player.sendMessage(Component.text("Added " + target.getUsername() + " as a friend!", NamedTextColor.GOLD));
 
-                final Player targetPlayer = plugin.getServer().getPlayer(target.getMojangId());
+                Player targetPlayer = plugin.getServer().getPlayer(target.getMojangId());
                 if (targetPlayer != null) {
-
                     targetPlayer.sendMessage(Component.text(source.getUsername() + " added you as a friend!", NamedTextColor.GOLD));
                 }
             }
@@ -84,11 +83,11 @@ public final class FriendCommand {
     }
 
     // Method for executing /friend remove
-    public int remove(final CommandContext<CommandSourceStack> context) {
-        final CommandSender sender = context.getSource().getSender();
+    public int remove(CommandContext<CommandSourceStack> context) {
+        CommandSender sender = context.getSource().getSender();
         if (sender instanceof Player player) {
-            final CorePlayer source = playerManager.getPlayer(player);
-            final CorePlayer target = context.getArgument("player", CorePlayer.class);
+            CorePlayer source = playerManager.getPlayer(player);
+            CorePlayer target = context.getArgument("player", CorePlayer.class);
 
             if (!(source.isFriend(target.getMojangId()))) {
                 player.sendMessage(Component.text(target.getUsername() + " is not a friend.", NamedTextColor.RED));
@@ -104,26 +103,26 @@ public final class FriendCommand {
     }
 
     // Method for executing /friend list
-    public int list(final CommandContext<CommandSourceStack> context) {
-        final CommandSender sender = context.getSource().getSender();
+    public int list(CommandContext<CommandSourceStack> context) {
+        CommandSender sender = context.getSource().getSender();
         if (sender instanceof Player player) {
-            final CorePlayer source = playerManager.getPlayer(player);
-            final List<String> friends = source.getFriends();
-            final List<String> usernames = new ArrayList<>();
+            CorePlayer source = playerManager.getPlayer(player);
+            List<String> friends = source.getFriends();
+            List<String> usernames = new ArrayList<>();
 
             if (!friends.isEmpty()) {
-                for (final String friendString : friends) {
-                    final UUID mojangId = UUID.fromString(friendString);
-                    final CorePlayer friend = playerManager.getPlayer(mojangId);
+                for (String friendString : friends) {
+                    UUID mojangId = UUID.fromString(friendString);
+                    CorePlayer friend = playerManager.getPlayer(mojangId);
                     if (friend != null) {
                         usernames.add(friend.getUsername());
                     }
                 }
             }
 
-            final int count = usernames.size();
-            final String list = StringUtils.join(usernames, ", ");
-            final Component component = Component.text("Friends [" + count + "]: " + list, NamedTextColor.GOLD);
+            int count = usernames.size();
+            String list = StringUtils.join(usernames, ", ");
+            Component component = Component.text("Friends [" + count + "]: " + list, NamedTextColor.GOLD);
             player.sendMessage(component);
         } else {
             sender.sendMessage(CoreUtils.getSenderNotPlayerComponent());

@@ -18,7 +18,7 @@ public final class ConfigManager {
     private CommentedConfigurationNode root;
 
     // Constructor
-    public ConfigManager(final CorePlugin plugin) {
+    public ConfigManager(CorePlugin plugin) {
         this.plugin = plugin;
         this.dataFolder = plugin.getDataFolder();
         this.logger = plugin.getLogger();
@@ -26,8 +26,8 @@ public final class ConfigManager {
 
     // Method to create and load config file
     public void init() {
-        final File configFile = new File(dataFolder, "config.conf");
-        final HoconConfigurationLoader loader = HoconConfigurationLoader.builder()
+        File configFile = new File(dataFolder, "config.conf");
+        HoconConfigurationLoader loader = HoconConfigurationLoader.builder()
                 .path(configFile.toPath())
                 .build();
 
@@ -45,13 +45,13 @@ public final class ConfigManager {
 
     // Method to get the server name from the config
     public String getServerName() {
-        final ConfigurationNode node = root.node("server");
+        ConfigurationNode node = root.node("server");
         return node.getString("default");
     }
 
     // Method to get the database settings from the config
     public DatabaseSettings getDatabaseSettings() {
-        final ConfigurationNode node = root.node("database");
+        ConfigurationNode node = root.node("database");
         try {
             return node.get(DatabaseSettings.class);
         } catch (SerializationException e) {
@@ -61,7 +61,7 @@ public final class ConfigManager {
 
     // Method to get the redis settings from the config
     public RedisSettings getRedisSettings() {
-        final ConfigurationNode node = root.node("redis");
+        ConfigurationNode node = root.node("redis");
         try {
             return node.get(RedisSettings.class);
         } catch (SerializationException e) {

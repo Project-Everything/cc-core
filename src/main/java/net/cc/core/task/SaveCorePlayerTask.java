@@ -9,7 +9,7 @@ public final class SaveCorePlayerTask implements Runnable {
     private final CorePlugin plugin;
 
     // Constructor
-    public SaveCorePlayerTask(final CorePlugin plugin) {
+    public SaveCorePlayerTask(CorePlugin plugin) {
         this.plugin = plugin;
     }
 

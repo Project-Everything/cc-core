@@ -16,7 +16,7 @@ public class CorePlayer {
 
     // New CorePlayer
     public CorePlayer(
-            final Player player
+            Player player
     ) {
         mojangId = player.getUniqueId();
         username = player.getName();
@@ -27,11 +27,11 @@ public class CorePlayer {
 
     // Existing CorePlayer
     public CorePlayer(
-            final UUID mojangId,
-            final String username,
-            final String displayName,
-            final String nickname,
-            final List<String> friends
+            UUID mojangId,
+            String username,
+            String displayName,
+            String nickname,
+            List<String> friends
     ) {
         this.mojangId = mojangId;
         this.username = username;

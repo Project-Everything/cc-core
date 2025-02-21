@@ -24,17 +24,18 @@ public class CorePlayerArgumentType implements CustomArgumentType.Converted<Core
 
     private final CorePlugin plugin;
 
-    public CorePlayerArgumentType(final CorePlugin plugin) {
+    public CorePlayerArgumentType(CorePlugin plugin) {
         this.plugin = plugin;
     }
 
     @Override
     public CorePlayer convert(String nativeType) throws CommandSyntaxException {
-        final CorePlayer current = plugin.getCorePlayerManager().getPlayer(nativeType);
+        CorePlayer current = plugin.getCorePlayerManager().getPlayer(nativeType);
 
         if (current != null) {
             return current;
         }
+
         Message message = MessageComponentSerializer.message().serialize(Component.text("Player not found.", NamedTextColor.RED));
         throw new CommandSyntaxException(new SimpleCommandExceptionType(message), message);
     }
@@ -46,7 +47,7 @@ public class CorePlayerArgumentType implements CustomArgumentType.Converted<Core
 
     @Override
     public <S> CompletableFuture<Suggestions> listSuggestions(CommandContext<S> context, SuggestionsBuilder builder) {
-        for (final CorePlayer corePlayer : plugin.getCorePlayerManager().getPlayers()) {
+        for (CorePlayer corePlayer : plugin.getCorePlayerManager().getPlayers()) {
             if (corePlayer.getUsername().toLowerCase().startsWith(builder.getRemainingLowerCase())) {
                 builder.suggest(corePlayer.getUsername());
             }

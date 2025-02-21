@@ -39,26 +39,26 @@ public final class DisplayNameCommand {
     }
 
     // Method for executing /displayname
-    private int view(final CommandContext<CommandSourceStack> ctx) {
-        final Player player = (Player) ctx.getSource().getSender();
-        final CorePlayer weavePlayer = plugin.getCorePlayerManager().getPlayer(player);
+    private int view(CommandContext<CommandSourceStack> ctx) {
+        Player player = (Player) ctx.getSource().getSender();
+        CorePlayer weavePlayer = plugin.getCorePlayerManager().getPlayer(player);
 
         if (weavePlayer != null) {
-            final String displayName = weavePlayer.getDisplayName();
+            String displayName = weavePlayer.getDisplayName();
             player.sendMessage(mm.deserialize("<gold>Your display name is:</gold> " + displayName + "<reset><gold>.\nSet your display name with /displayname {name}.</gold>"));
         }
         return Command.SINGLE_SUCCESS;
     }
 
     // Method for executing /displayname {value}
-    private int set(final CommandContext<CommandSourceStack> ctx) {
-        final Player player = (Player) ctx.getSource().getSender();
-        final CorePlayer corePlayer = plugin.getCorePlayerManager().getPlayer(player);
+    private int set(CommandContext<CommandSourceStack> ctx) {
+        Player player = (Player) ctx.getSource().getSender();
+        CorePlayer corePlayer = plugin.getCorePlayerManager().getPlayer(player);
 
         if (corePlayer != null) {
-            final String displayName = ctx.getArgument("name", String.class);
-            final Component displayNameComponent = mm.deserialize(displayName);
-            final String rawDisplayName = PlainTextComponentSerializer.plainText().serialize(displayNameComponent);
+            String displayName = ctx.getArgument("name", String.class);
+            Component displayNameComponent = mm.deserialize(displayName);
+            String rawDisplayName = PlainTextComponentSerializer.plainText().serialize(displayNameComponent);
 
             if (player.getName().equals(rawDisplayName)) {
                 corePlayer.setDisplayName(displayName);
@@ -72,12 +72,12 @@ public final class DisplayNameCommand {
     }
 
     // Method for executing /displayname reset
-    private int reset(final CommandContext<CommandSourceStack> ctx) {
-        final Player player = (Player) ctx.getSource().getSender();
-        final CorePlayer corePlayer = plugin.getCorePlayerManager().getPlayer(player);
+    private int reset(CommandContext<CommandSourceStack> ctx) {
+        Player player = (Player) ctx.getSource().getSender();
+        CorePlayer corePlayer = plugin.getCorePlayerManager().getPlayer(player);
 
         if (corePlayer != null) {
-            final String displayName = "<gray>" + player.getName() + "</gray>";
+            String displayName = "<gray>" + player.getName() + "</gray>";
             corePlayer.setDisplayName(displayName);
             player.sendMessage(mm.deserialize("<gold>Display name has been reset.</gold>"));
             plugin.getCorePlayerManager().updatePlayer(corePlayer);
