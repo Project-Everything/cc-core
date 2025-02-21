@@ -30,7 +30,6 @@ dependencies {
     implementation("org.spongepowered:configurate-hocon:4.1.2")
     compileOnly("io.papermc.paper:paper-api:1.21.4-R0.1-SNAPSHOT")
     compileOnly("me.clip:placeholderapi:2.11.6")
-    compileOnly("org.sayandev:sayanvanish-api:1.6.6-SNAPSHOT")
 }
 
 java {
