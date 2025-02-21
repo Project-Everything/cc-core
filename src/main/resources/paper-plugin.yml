@@ -14,4 +14,4 @@ dependencies:
     SayanVanish:
       load: BEFORE
       required: true
-      join-classpath: false
+      join-classpath: true
