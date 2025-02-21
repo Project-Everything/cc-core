@@ -10,7 +10,7 @@ dependencies:
     PlaceholderAPI:
       load: BEFORE
       required: true
-      join-classpath: false
+      join-classpath: true
     SayanVanish:
       load: BEFORE
       required: true
