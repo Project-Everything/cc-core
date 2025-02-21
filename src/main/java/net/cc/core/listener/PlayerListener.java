@@ -27,9 +27,10 @@ public final class PlayerListener implements Listener {
         Player player = event.getPlayer();
         CorePlayer corePlayer = plugin.getCorePlayerManager().loadPlayer(player);
 
-        // TODO vanish check
-        Component component = Component.text("++ " + player.getName(), NamedTextColor.GREEN);
-        plugin.getServer().broadcast(component);
+        if (!corePlayer.isVanished()) {
+            Component component = Component.text("++ " + player.getName(), NamedTextColor.GREEN);
+            plugin.getServer().broadcast(component);
+        }
     }
 
     @EventHandler
@@ -39,9 +40,10 @@ public final class PlayerListener implements Listener {
         Player player = event.getPlayer();
         CorePlayer corePlayer = plugin.getCorePlayerManager().getPlayer(player);
 
-        // TODO vanish check
-        Component component = Component.text("-- " + player.getName(), NamedTextColor.RED);
-        plugin.getServer().broadcast(component);
+        if (!corePlayer.isVanished()) {
+            Component component = Component.text("-- " + player.getName(), NamedTextColor.RED);
+            plugin.getServer().broadcast(component);
+        }
 
         plugin.getDatabaseManager().saveCorePlayer(corePlayer);
     }
