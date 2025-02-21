@@ -32,6 +32,7 @@ public final class VanishCommand {
         commands.register(node, "Toggle vanish", List.of("v"));
     }
 
+    // Method for executing the command
     private int execute0(CommandContext<CommandSourceStack> context) {
         CommandSender sender = context.getSource().getSender();
 

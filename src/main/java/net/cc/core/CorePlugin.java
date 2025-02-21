@@ -47,6 +47,7 @@ public final class CorePlugin extends JavaPlugin {
         databaseManager.createTables();
         corePlayerManager = new CorePlayerManager(this);
 
+        // PlaceholderAPI integration
         if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null) {
             new PlaceholderAPIHook(this).register();
         }
@@ -67,6 +68,7 @@ public final class CorePlugin extends JavaPlugin {
         }
     }
 
+    // Register commands using the Lifecycle Manager
     private void registerCommands() {
         getLifecycleManager().registerEventHandler(LifecycleEvents.COMMANDS, event -> {
             Commands commands = event.registrar();
@@ -78,10 +80,12 @@ public final class CorePlugin extends JavaPlugin {
         });
     }
 
+    // Register Listener classes
     private void registerListeners() {
         new PlayerListener(this);
     }
 
+    // Register tasks with the Bukkit Scheduler
     private void registerTasks() {
         BukkitScheduler scheduler = getServer().getScheduler();
         scheduler.runTaskTimer(this, new SaveCorePlayerTask(this), 60000L, 60000L); // update every minute
