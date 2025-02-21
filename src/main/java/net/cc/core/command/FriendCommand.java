@@ -55,6 +55,7 @@ public final class FriendCommand {
         registrar.register(node, "Manage your friends", List.of("f"));
     }
 
+    // Method for executing /friend add
     public int add(final CommandContext<CommandSourceStack> context) {
         final CommandSender sender = context.getSource().getSender();
         if (sender instanceof Player player) {
@@ -82,6 +83,7 @@ public final class FriendCommand {
         return Command.SINGLE_SUCCESS;
     }
 
+    // Method for executing /friend remove
     public int remove(final CommandContext<CommandSourceStack> context) {
         final CommandSender sender = context.getSource().getSender();
         if (sender instanceof Player player) {
@@ -101,6 +103,7 @@ public final class FriendCommand {
         return Command.SINGLE_SUCCESS;
     }
 
+    // Method for executing /friend list
     public int list(final CommandContext<CommandSourceStack> context) {
         final CommandSender sender = context.getSource().getSender();
         if (sender instanceof Player player) {

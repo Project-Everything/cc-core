@@ -3,7 +3,6 @@ package net.cc.core;
 import io.papermc.paper.command.brigadier.Commands;
 import io.papermc.paper.plugin.lifecycle.event.types.LifecycleEvents;
 import net.cc.core.command.FriendCommand;
-import net.cc.core.command.MeowCommand;
 import net.cc.core.command.DisplayNameCommand;
 import net.cc.core.command.NicknameCommand;
 import net.cc.core.config.ConfigManager;
@@ -88,7 +87,6 @@ public final class CorePlugin extends JavaPlugin {
 
             new DisplayNameCommand(this, commands);
             new FriendCommand(this, commands);
-            new MeowCommand(this, commands);
             new NicknameCommand(this, commands);
         });
     }
