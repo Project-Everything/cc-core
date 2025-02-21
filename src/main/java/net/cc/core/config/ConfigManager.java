@@ -22,8 +22,6 @@ public final class ConfigManager {
         this.plugin = plugin;
         this.dataFolder = plugin.getDataFolder();
         this.logger = plugin.getLogger();
-
-        init();
     }
 
     // Method to create and load config file

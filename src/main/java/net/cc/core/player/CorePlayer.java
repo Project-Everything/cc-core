@@ -87,4 +87,10 @@ public class CorePlayer {
     public boolean isFriend(final UUID mojangId) {
         return this.friends.contains(mojangId.toString());
     }
+
+    @Override
+    public boolean equals(final Object o) {
+        if (!(o instanceof CorePlayer corePlayer)) return false;
+        return mojangId.equals(corePlayer.mojangId);
+    }
 }

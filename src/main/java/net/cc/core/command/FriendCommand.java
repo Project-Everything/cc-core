@@ -1,4 +1,4 @@
-package net.cc.core.command.friend;
+package net.cc.core.command;
 
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.context.CommandContext;

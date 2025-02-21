@@ -4,12 +4,12 @@ import net.cc.core.CorePlugin;
 import net.cc.core.player.CorePlayer;
 import org.bukkit.entity.Player;
 
-public final class UpdatePlayersTask implements Runnable {
+public final class SaveCorePlayerTask implements Runnable {
 
     private final CorePlugin plugin;
 
     // Constructor
-    public UpdatePlayersTask(final CorePlugin plugin) {
+    public SaveCorePlayerTask(final CorePlugin plugin) {
         this.plugin = plugin;
     }
 

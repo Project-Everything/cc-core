@@ -6,12 +6,9 @@ import net.cc.core.CorePlugin;
 import net.cc.core.config.ConfigManager;
 import net.cc.core.config.DatabaseSettings;
 import net.cc.core.player.CorePlayer;
-import net.cc.core.storage.query.CorePlayerQuery;
 
 import java.sql.*;
-import java.util.Arrays;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.logging.Logger;
 
@@ -31,7 +28,7 @@ public final class DatabaseManager {
         createTables();
     }
 
-    // Method to init the HikariCP data source using the database settings from the config
+    // Method to create the HikariCP data source (connection to SQL database)
     private void init() {
         final DatabaseSettings settings = config.getDatabaseSettings();
         final HikariConfig hikariConfig = new HikariConfig();
@@ -84,34 +81,51 @@ public final class DatabaseManager {
         });
     }
 
-    // Asynchronous method to query a CorePlayer from the database
-    public CompletableFuture<CorePlayerQuery> queryCorePlayer(final UUID id) {
+    // Asynchronous method to get a CorePlayer from the database
+    public CompletableFuture<CorePlayer> queryCorePlayer(final UUID id) {
         return CompletableFuture.supplyAsync(() -> {
-            final CorePlayerQuery query = new CorePlayerQuery();
             try (Connection connection = getConnection()) {
-                PreparedStatement statement;
-                if (id != null) {
-                    statement = connection.prepareStatement("SELECT * FROM " + PLAYERS_TABLE + " WHERE id = ?");
-                    statement.setString(1, id.toString());
-                } else {
-                    statement = connection.prepareStatement("SELECT * FROM " + PLAYERS_TABLE + ";");
-                }
+                PreparedStatement statement = connection.prepareStatement("SELECT * FROM " + PLAYERS_TABLE + " WHERE id = ?");
+                statement.setString(1, id.toString());
 
                 final ResultSet resultSet = statement.executeQuery();
-                while (resultSet.next()) {
-                    final UUID mojangId = UUID.fromString(resultSet.getString("id"));
-                    final String username = resultSet.getString("username");
-                    final String displayName = resultSet.getString("display_name");
-                    final String nickname = resultSet.getString("nickname");
-                    final List<String> friends = stringToList(resultSet.getString("friends"));
-
-                    query.addResult(new CorePlayer(mojangId, username, displayName, nickname, friends));
+                if (resultSet.next()) {
+                    return getPlayerResult(resultSet);
                 }
             } catch (SQLException e) {
                 logger.severe("Error querying core player: " + e.getMessage());
             }
-            return query;
+            return null;
         });
+    }
+
+    // Asynchronous method to get all CorePlayers from the database
+    public CompletableFuture<Set<CorePlayer>> queryCorePlayers() {
+        return CompletableFuture.supplyAsync(() -> {
+            try (Connection connection = getConnection()) {
+                Set<CorePlayer> corePlayers = new HashSet<>();
+                PreparedStatement statement = connection.prepareStatement("SELECT * FROM " + PLAYERS_TABLE + ";");
+
+                final ResultSet resultSet = statement.executeQuery();
+                if (resultSet.next()) {
+                    corePlayers.add(getPlayerResult(resultSet));
+                }
+                return corePlayers;
+            } catch (SQLException e) {
+                logger.severe("Error querying core player: " + e.getMessage());
+            }
+            return null;
+        });
+    }
+
+    private CorePlayer getPlayerResult(ResultSet resultSet) throws SQLException {
+        final UUID mojangId = UUID.fromString(resultSet.getString("id"));
+        final String username = resultSet.getString("username");
+        final String displayName = resultSet.getString("display_name");
+        final String nickname = resultSet.getString("nickname");
+        final List<String> friends = stringToList(resultSet.getString("friends"));
+
+        return new CorePlayer(mojangId, username, displayName, nickname, friends);
     }
 
     // Close the data source

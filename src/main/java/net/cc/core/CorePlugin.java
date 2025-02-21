@@ -2,10 +2,10 @@ package net.cc.core;
 
 import io.papermc.paper.command.brigadier.Commands;
 import io.papermc.paper.plugin.lifecycle.event.types.LifecycleEvents;
-import net.cc.core.command.friend.FriendCommand;
-import net.cc.core.command.misc.MeowCommand;
-import net.cc.core.command.player.DisplayNameCommand;
-import net.cc.core.command.player.NicknameCommand;
+import net.cc.core.command.FriendCommand;
+import net.cc.core.command.MeowCommand;
+import net.cc.core.command.DisplayNameCommand;
+import net.cc.core.command.NicknameCommand;
 import net.cc.core.config.ConfigManager;
 import net.cc.core.hook.PlaceholderAPIHook;
 import net.cc.core.task.*;
@@ -31,6 +31,7 @@ public final class CorePlugin extends JavaPlugin {
     public void onLoad() {
         // Plugin load logic
         configManager = new ConfigManager(this);
+        configManager.init();
         serverName = configManager.getServerName();
     }
 
@@ -98,7 +99,7 @@ public final class CorePlugin extends JavaPlugin {
 
     private void registerTasks() {
         final BukkitScheduler scheduler = getServer().getScheduler();
-        scheduler.runTaskTimer(this, new UpdatePlayersTask(this), 60000L, 60000L); // update every minute
+        scheduler.runTaskTimer(this, new SaveCorePlayerTask(this), 60000L, 60000L); // update every minute
         scheduler.runTaskTimer(this, new UpdateRedisTask(this), 10L, 10L); // update every 10ms
     }
 }

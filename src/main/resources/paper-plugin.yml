@@ -9,5 +9,9 @@ dependencies:
   server:
     PlaceholderAPI:
       load: BEFORE
-      required: false
-      join-classpath: true
+      required: true
+      join-classpath: false
+    SayanVanish:
+      load: BEFORE
+      required: true
+      join-classpath: false

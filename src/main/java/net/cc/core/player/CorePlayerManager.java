@@ -32,9 +32,8 @@ public final class CorePlayerManager {
         }
 
         final CorePlayer corePlayer = new CorePlayer(player);
-        plugin.getDatabaseManager().queryCorePlayer(player.getUniqueId()).thenAccept(corePlayerQuery -> {
-            if (corePlayerQuery.hasResults()) {
-                final CorePlayer existing = corePlayerQuery.getFirst();
+        plugin.getDatabaseManager().queryCorePlayer(player.getUniqueId()).thenAccept(existing -> {
+            if (existing != null) {
                 corePlayer.setUsername(existing.getUsername());
                 corePlayer.setDisplayName(existing.getDisplayName());
                 corePlayer.setNickname(existing.getNickname());
