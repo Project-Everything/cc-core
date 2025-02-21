@@ -1,6 +1,7 @@
 plugins {
     id("java")
     id("com.gradleup.shadow") version ("9.0.0-beta2")
+    id("io.freefair.lombok") version ("8.12.1")
 }
 
 group = "net.cc"

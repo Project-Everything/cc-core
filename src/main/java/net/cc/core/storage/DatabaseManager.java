@@ -23,13 +23,26 @@ public final class DatabaseManager {
     public DatabaseManager(final CorePlugin plugin) {
         this.logger = plugin.getLogger();
         this.config = plugin.getConfigManager();
+    }
 
-        init();
-        createTables();
+    // List to String conversion with null handling
+    public static String listToString(List<String> list) {
+        if (list == null || list.isEmpty()) {
+            return "";
+        }
+        return String.join(",", list);
+    }
+
+    // String to List conversion with null handling
+    public static List<String> stringToList(String str) {
+        if (str == null || str.isEmpty()) {
+            return List.of();
+        }
+        return Arrays.asList(str.split(","));
     }
 
     // Method to create the HikariCP data source (connection to SQL database)
-    private void init() {
+    public void init() {
         DatabaseSettings settings = config.getDatabaseSettings();
         HikariConfig hikariConfig = new HikariConfig();
 
@@ -45,7 +58,7 @@ public final class DatabaseManager {
     }
 
     // Creates the necessary database tables if they do not exist
-    private void createTables() {
+    public void createTables() {
         try (Connection connection = getConnection()) {
             Statement statement = connection.createStatement();
             statement.addBatch("CREATE TABLE IF NOT EXISTS " + PLAYERS_TABLE + " (id VARCHAR(36) PRIMARY KEY, username VARCHAR(16), display_name VARCHAR(128), nickname VARCHAR(64), friends TEXT);");
@@ -59,20 +72,24 @@ public final class DatabaseManager {
     public void saveCorePlayer(CorePlayer corePlayer) {
         CompletableFuture.runAsync(() -> {
             try (Connection connection = getConnection()) {
-                final PreparedStatement statement = connection.prepareStatement("INSERT INTO " + PLAYERS_TABLE + " (id, username, display_name, nickname, friends) VALUES (?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE username = ?, display_name = ?, nickname = ?, friends = ?;");
+                String sql = "INSERT INTO " + PLAYERS_TABLE + " (id, username, display_name, nickname, vanished, friends) VALUES (?, ?, ?, ?, ?, ?)" +
+                        " ON DUPLICATE KEY UPDATE username = ?, display_name = ?, nickname = ?, vanished = ?, friends = ?;";
+                PreparedStatement statement = connection.prepareStatement(sql);
 
                 // Insert values if missing
                 statement.setString(1, corePlayer.getMojangId().toString());
                 statement.setString(2, corePlayer.getUsername());
                 statement.setString(3, corePlayer.getDisplayName());
                 statement.setString(4, corePlayer.getNickname());
-                statement.setString(5, listToString(corePlayer.getFriends()));
+                statement.setBoolean(5, corePlayer.isVanished());
+                statement.setString(6, listToString(corePlayer.getFriends()));
 
                 // Update existing values
-                statement.setString(6, corePlayer.getUsername());
-                statement.setString(7, corePlayer.getDisplayName());
-                statement.setString(8, corePlayer.getNickname());
-                statement.setString(9, listToString(corePlayer.getFriends()));
+                statement.setString(7, corePlayer.getUsername());
+                statement.setString(8, corePlayer.getDisplayName());
+                statement.setString(9, corePlayer.getNickname());
+                statement.setBoolean(10, corePlayer.isVanished());
+                statement.setString(11, listToString(corePlayer.getFriends()));
 
                 statement.execute();
             } catch (SQLException e) {
@@ -123,9 +140,10 @@ public final class DatabaseManager {
         String username = resultSet.getString("username");
         String displayName = resultSet.getString("display_name");
         String nickname = resultSet.getString("nickname");
+        boolean vanished = resultSet.getBoolean("vanished");
         List<String> friends = stringToList(resultSet.getString("friends"));
 
-        return new CorePlayer(mojangId, username, displayName, nickname, friends);
+        return new CorePlayer(mojangId, username, displayName, nickname, vanished, friends);
     }
 
     // Close the data source
@@ -138,21 +156,5 @@ public final class DatabaseManager {
     // Retrieves a database connection from the data source
     private Connection getConnection() throws SQLException {
         return dataSource.getConnection();
-    }
-
-    // List to String conversion with null handling
-    public static String listToString(List<String> list) {
-        if (list == null || list.isEmpty()) {
-            return "";
-        }
-        return String.join(",", list);
-    }
-
-    // String to List conversion with null handling
-    public static List<String> stringToList(String str) {
-        if (str == null || str.isEmpty()) {
-            return List.of();
-        }
-        return Arrays.asList(str.split(","));
     }
 }

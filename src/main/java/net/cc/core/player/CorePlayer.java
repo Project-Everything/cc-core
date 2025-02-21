@@ -1,17 +1,22 @@
 package net.cc.core.player;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+@Getter
+@Setter
 public class CorePlayer {
 
     private final UUID mojangId;
     private String username;
     private String displayName;
     private String nickname;
+    private boolean vanished;
     private List<String> friends;
 
     // New CorePlayer
@@ -22,6 +27,7 @@ public class CorePlayer {
         username = player.getName();
         displayName = "<gray>" + player.getName() + "</gray>";
         nickname = "";
+        vanished = false;
         friends = new ArrayList<>();
     }
 
@@ -31,48 +37,14 @@ public class CorePlayer {
             String username,
             String displayName,
             String nickname,
+            boolean vanished,
             List<String> friends
     ) {
         this.mojangId = mojangId;
         this.username = username;
         this.displayName = displayName;
         this.nickname = nickname;
-        this.friends = friends;
-    }
-
-    public UUID getMojangId() {
-        return mojangId;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(final String username) {
-        this.username = username;
-    }
-
-    public String getDisplayName() {
-        return displayName;
-    }
-
-    public void setDisplayName(final String displayName) {
-        this.displayName = displayName;
-    }
-
-    public String getNickname() {
-        return nickname;
-    }
-
-    public void setNickname(final String nickname) {
-        this.nickname = nickname;
-    }
-
-    public List<String> getFriends() {
-        return friends;
-    }
-
-    public void setFriends(final List<String> friends) {
+        this.vanished = vanished;
         this.friends = friends;
     }
 

@@ -18,7 +18,7 @@ public final class CorePlayerManager {
     // Constructor
     public CorePlayerManager(CorePlugin plugin) {
         this.plugin = plugin;
-        this.redis = plugin.getRedisHandler();
+        this.redis = plugin.getRedisManager();
         this.all = new ArrayList<>();
     }
 

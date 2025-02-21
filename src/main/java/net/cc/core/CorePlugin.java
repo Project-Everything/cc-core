@@ -2,6 +2,7 @@ package net.cc.core;
 
 import io.papermc.paper.command.brigadier.Commands;
 import io.papermc.paper.plugin.lifecycle.event.types.LifecycleEvents;
+import lombok.Getter;
 import net.cc.core.command.FriendCommand;
 import net.cc.core.command.DisplayNameCommand;
 import net.cc.core.command.NicknameCommand;
@@ -16,6 +17,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitScheduler;
 
+@Getter
 @SuppressWarnings("UnstableApiUsage")
 public final class CorePlugin extends JavaPlugin {
 
@@ -31,6 +33,7 @@ public final class CorePlugin extends JavaPlugin {
         // Plugin load logic
         configManager = new ConfigManager(this);
         configManager.init();
+
         serverName = configManager.getServerName();
     }
 
@@ -39,6 +42,8 @@ public final class CorePlugin extends JavaPlugin {
         // Plugin startup logic
         redisManager = new RedisManager(this);
         databaseManager = new DatabaseManager(this);
+        databaseManager.init();
+        databaseManager.createTables();
         corePlayerManager = new CorePlayerManager(this);
 
         if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null) {
@@ -59,26 +64,6 @@ public final class CorePlugin extends JavaPlugin {
         if (databaseManager != null) {
             databaseManager.close();
         }
-    }
-
-    public String getServerName() {
-        return serverName;
-    }
-
-    public ConfigManager getConfigManager() {
-        return configManager;
-    }
-
-    public RedisManager getRedisHandler() {
-        return redisManager;
-    }
-
-    public DatabaseManager getDatabaseManager() {
-        return databaseManager;
-    }
-
-    public CorePlayerManager getCorePlayerManager() {
-        return corePlayerManager;
     }
 
     private void registerCommands() {
