@@ -9,6 +9,7 @@ import net.cc.core.api.model.chat.ChatMessage;
 import net.cc.core.api.model.chat.PrivateMessage;
 import net.cc.core.api.model.player.CorePlayer;
 import net.cc.core.model.player.PaperCorePlayerMemento;
+import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
 import org.bukkit.entity.Player;
@@ -106,6 +107,20 @@ public final class CoreSubscriber extends JedisPubSub {
                         final PrivateMessage privateMessage = gson.fromJson(message, PrivateMessage.class);
                         this.plugin.getChatController().handlePrivateMessage(privateMessage);
                     });
+            // Redis channel for chat clear
+            case Constants.REDIS_CHANNEL_CLEAR_CHAT -> {
+                final Component component = this.plugin.getMiniMessage().deserialize(message);
+
+                final String string = "\n".repeat(500);
+                final Component lines = this.plugin.getMiniMessage().deserialize(string);
+
+                this.plugin.getComponentLogger().info(component);
+                this.plugin.getServer().getOnlinePlayers().forEach(onlinePlayer -> {
+                    // Send message to audience
+                    onlinePlayer.sendMessage(lines);
+                    onlinePlayer.sendMessage(component);
+                });
+            }
         }
     }
 

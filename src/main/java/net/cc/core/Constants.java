@@ -25,6 +25,7 @@ public final class Constants {
     public static final String REDIS_CHANNEL_CHAT_MESSAGE = "core:chat_message";
     public static final String REDIS_CHANNEL_PRIVATE_MESSAGE = "core:private_message";
     public static final String REDIS_CHANNEL_MAIL_MESSAGE = "core:mail_message";
+    public static final String REDIS_CHANNEL_CLEAR_CHAT = "core:clear_chat";
 
     // Redis keys
     public static final String REDIS_KEY_MEOW = "core:meows";

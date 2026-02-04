@@ -5,6 +5,7 @@ import com.mojang.brigadier.context.CommandContext;
 import io.papermc.paper.command.brigadier.CommandSourceStack;
 import io.papermc.paper.command.brigadier.Commands;
 import lombok.RequiredArgsConstructor;
+import net.cc.core.Constants;
 import net.cc.core.CorePlugin;
 import net.cc.core.api.model.CorePermission;
 import net.kyori.adventure.text.Component;
@@ -35,30 +36,23 @@ public final class ClearChatCommand {
     // Executes the command
     private int execute(final CommandContext<CommandSourceStack> ctx) {
         final CommandSender sender = ctx.getSource().getSender();
-        final Component message;
+        final Component component;
 
         if (sender instanceof Player player) {
             // Player is executing the command
-            message = this.plugin.getConfigController().getMessage(
+            component = this.plugin.getConfigController().getMessage(
                     "command-clear-chat",
                     Placeholder.parsed("username", player.getName())
             );
         } else {
             // Console is executing the command
-            message = this.plugin.getConfigController().getMessage(
+            component = this.plugin.getConfigController().getMessage(
                     "command-clear-chat-console"
             );
         }
 
-        final String string = "\n".repeat(500);
-        final Component lines = this.plugin.getMiniMessage().deserialize(string);
-
-        this.plugin.getComponentLogger().info(message);
-        this.plugin.getServer().getOnlinePlayers().forEach(onlinePlayer -> {
-            // Send message to audience
-            onlinePlayer.sendMessage(lines);
-            onlinePlayer.sendMessage(message);
-        });
+        final String message = this.plugin.getMiniMessage().serialize(component);
+        this.plugin.getRedisController().publish(Constants.REDIS_CHANNEL_CLEAR_CHAT, message);
 
         return Command.SINGLE_SUCCESS;
     }
