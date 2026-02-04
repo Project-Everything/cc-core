@@ -22,7 +22,7 @@ public final class CorePlaceholderExpansion extends PlaceholderExpansion {
     // Expansion ID
     @Override
     public @NotNull String getIdentifier() {
-        return "ae-core";
+        return "cc-core";
     }
 
     // Author

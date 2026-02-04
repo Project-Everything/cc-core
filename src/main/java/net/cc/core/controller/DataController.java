@@ -61,7 +61,7 @@ public final class DataController {
         this.sqlSavePlayer = """
                 INSERT INTO core_players
                 (id, created_at, updated_at, joined_at, name, server, channels, standing, recent, display_name, nickname, friends, blocked, online, vanished, spying, allow_tpa, allow_mention, confirmed, coins, votes, meows)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE
                 created_at = ?, updated_at = ?, joined_at = ?, name = ?, server = ?, channels = ?, standing = ?, recent = ?, display_name = ?, nickname = ?, friends = ?, blocked = ?, online = ?, vanished = ?, spying = ?, allow_tpa = ?, allow_mention = ?, confirmed = ?, coins = ?, votes = ?, meows = ?
                 """;
         this.sqlConfirmAll = "UPDATE core_players SET confirmed = true;";
@@ -284,7 +284,7 @@ public final class DataController {
         final boolean allowTpa = resultSet.getBoolean("allow_tpa");
         final boolean allowMention = resultSet.getBoolean("allow_mention");
         final boolean confirmed = resultSet.getBoolean("confirmed");
-        final int tokens = resultSet.getInt("tokens");
+        final int coins = resultSet.getInt("coins");
         final int votes = resultSet.getInt("votes");
         final int meows = resultSet.getInt("meows");
 
@@ -309,7 +309,7 @@ public final class DataController {
                 allowTpa,
                 allowMention,
                 confirmed,
-                tokens,
+                coins,
                 votes,
                 meows
         );
