@@ -32,12 +32,12 @@ public final class PlayerSyncTask extends BukkitRunnable {
 
         // Set player to offline after 1 second
         this.plugin.getPlayerController().getPlayers().forEach(corePlayer -> {
-            if (System.currentTimeMillis() - corePlayer.getUpdatedAt() > 1000) {
+            if (corePlayer.isOnline() && System.currentTimeMillis() - corePlayer.getUpdatedAt() > 1000) {
                 corePlayer.setOnline(false, false);
 
                 if (this.plugin.isDebugMode()) {
                     this.plugin.getComponentLogger().warn(
-                            "Removed '{}:{}' from the cache",
+                            "Set '{}:{}' to offline",
                             corePlayer.getUniqueId(), corePlayer.getName()
                     );
                 }
