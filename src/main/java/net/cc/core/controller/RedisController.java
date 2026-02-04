@@ -66,7 +66,8 @@ public final class RedisController {
                         Constants.REDIS_CHANNEL_VANISH,
                         Constants.REDIS_CHANNEL_CHAT_MESSAGE,
                         Constants.REDIS_CHANNEL_PRIVATE_MESSAGE,
-                        Constants.REDIS_CHANNEL_MAIL_MESSAGE
+                        Constants.REDIS_CHANNEL_MAIL_MESSAGE,
+                        Constants.REDIS_CHANNEL_CLEAR_CHAT
                 );
             } catch (final RuntimeException e) {
                 this.plugin.getComponentLogger().error("Failed to subscribe to channels", e);
