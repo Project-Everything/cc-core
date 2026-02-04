@@ -52,6 +52,7 @@ public final class CoreSubscriber extends JedisPubSub {
 
                 if (corePlayer != null) {
                     corePlayer.setUpdatedAt(System.currentTimeMillis(), true);
+                    corePlayer.setOnline(true, true);
                 } else {
                     this.plugin.getDataController().queryPlayer(uuid).thenAccept(dbPlayer -> {
                         if (dbPlayer != null) {
