@@ -29,8 +29,9 @@ public final class VanishTask extends BukkitRunnable {
             final CorePlayer corePlayer = this.plugin.getPlayerController().getPlayer(player);
             if (corePlayer != null) {
                 // Disable vanish if permission is missing
-                if (!player.hasPermission(CorePermission.COMMAND_VANISH.get())) {
+                if (corePlayer.isVanished() && !player.hasPermission(CorePermission.COMMAND_VANISH.get())) {
                     corePlayer.setVanished(false);
+                    player.removePotionEffect(PotionEffectType.INVISIBILITY);
                 }
 
                 // Add invisibility to vanished player
@@ -50,7 +51,7 @@ public final class VanishTask extends BukkitRunnable {
 
                 // Disable entity targeting
                 if (corePlayer.isVanished()) {
-                    for (final Entity entity : player.getWorld().getEntities() ) {
+                    for (final Entity entity : player.getWorld().getEntities()) {
                         if (entity instanceof Creature creature) {
                             if (creature.getTarget() != null && creature.getTarget().equals(player)) {
                                 creature.setTarget(null);
