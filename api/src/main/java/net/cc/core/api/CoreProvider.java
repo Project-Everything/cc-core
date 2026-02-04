@@ -5,7 +5,7 @@ import org.jetbrains.annotations.ApiStatus;
 /**
  * Static accessor for the {@link Core} instance.
  *
- * @since 2.0
+ * @since 1.0
  */
 public final class CoreProvider {
 
