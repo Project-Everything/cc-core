@@ -58,6 +58,22 @@ public final class CorePlaceholderExpansion extends PlaceholderExpansion {
                         ? String.valueOf(corePlayer.getCoins())
                         : "?";
             }
+            // Votes placeholder
+            case "votes" -> {
+                final CorePlayer corePlayer = this.plugin.getPlayerController().getPlayer(player);
+
+                return corePlayer != null
+                        ? String.valueOf(corePlayer.getVotes())
+                        : "?";
+            }
+            // Meows placeholder
+            case "meows" -> {
+                final CorePlayer corePlayer = this.plugin.getPlayerController().getPlayer(player);
+
+                return corePlayer != null
+                        ? String.valueOf(corePlayer.getMeows())
+                        : "?";
+            }
             // Online player count
             case "online" -> {
                 return String.valueOf(this.plugin.getPlayerController().getPlayerCount(player));
