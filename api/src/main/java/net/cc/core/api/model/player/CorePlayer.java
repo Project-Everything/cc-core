@@ -78,7 +78,7 @@ public interface CorePlayer {
 
     boolean isOnline();
 
-    void setOnline(final boolean online);
+    void setOnline(final boolean online, final boolean silent);
 
     boolean isVanished();
 

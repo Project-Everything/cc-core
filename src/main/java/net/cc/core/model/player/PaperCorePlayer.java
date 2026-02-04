@@ -134,6 +134,7 @@ public final class PaperCorePlayer implements CorePlayer {
     public void setUpdatedAt(final long updatedAt, final boolean silent) {
         if (!(Objects.equals(this.updatedAt, updatedAt))) {
             this.updatedAt = updatedAt;
+
             if (!(silent)) {
                 this.save();
             }
@@ -294,10 +295,13 @@ public final class PaperCorePlayer implements CorePlayer {
 
     // Sets the player's online state
     @Override
-    public void setOnline(final boolean online) {
+    public void setOnline(final boolean online, final boolean silent) {
         if (!(Objects.equals(this.online, online))) {
             this.online = online;
-            this.save();
+
+            if (!(silent)) {
+                this.save();
+            }
         }
     }
 

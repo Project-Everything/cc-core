@@ -23,6 +23,7 @@ public final class PlayerSyncTask extends BukkitRunnable {
             if (corePlayer != null) {
                 // Update player silently
                 corePlayer.setUpdatedAt(System.currentTimeMillis(), true);
+                corePlayer.setOnline(true, true);
 
                 this.plugin.getPlayerController().validateChannels(corePlayer);
                 this.plugin.getPlayerController().updatePlayer(corePlayer);
@@ -32,7 +33,7 @@ public final class PlayerSyncTask extends BukkitRunnable {
         // Set player to offline after 1 second
         this.plugin.getPlayerController().getPlayers().forEach(corePlayer -> {
             if (System.currentTimeMillis() - corePlayer.getUpdatedAt() > 1000) {
-                corePlayer.setOnline(false);
+                corePlayer.setOnline(false, false);
 
                 if (this.plugin.isDebugMode()) {
                     this.plugin.getComponentLogger().warn(

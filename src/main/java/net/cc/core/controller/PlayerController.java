@@ -54,7 +54,7 @@ public final class PlayerController {
 
             if (!(corePlayer.isOnline())) {
                 // Player was offline
-                corePlayer.setOnline(true);
+                corePlayer.setOnline(true, false);
                 corePlayer.setUpdatedAt(System.currentTimeMillis(), false);
                 corePlayer.setJoinedAt(System.currentTimeMillis());
             }

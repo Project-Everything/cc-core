@@ -289,7 +289,7 @@ public final class CoreCommand {
             corePlayer.setNickname(Component.empty());
             corePlayer.setFriends(new ArrayList<>());
             corePlayer.setBlocked(new ArrayList<>());
-            corePlayer.setOnline(corePlayer.isOnline());
+            corePlayer.setOnline(corePlayer.isOnline(), false);
             corePlayer.setVanished(false);
             corePlayer.setSpying(false);
             corePlayer.setAllowTpa(true);
