@@ -75,6 +75,54 @@ public final class ServiceController {
         return resident.getTownOrNull();
     }
 
+    // Checks if a player has a Town
+    public boolean hasTown(final UUID uuid) {
+        final Resident resident = this.getResident(uuid);
+
+        if (resident != null) {
+            final Town town = resident.getTownOrNull();
+            return town != null;
+        }
+        return false;
+    }
+
+    // Checks if a player has a Nation
+    public boolean hasNation(final UUID uuid) {
+        final Resident resident = this.getResident(uuid);
+
+        if (resident != null) {
+            final Nation nation = resident.getNationOrNull();
+            return nation != null;
+        }
+        return false;
+    }
+
+    // Gets the Town name for a user ID
+    public String getTownName(final UUID uuid) {
+        final Resident resident = this.getResident(uuid);
+
+        if (resident != null) {
+            final Town town = resident.getTownOrNull();
+            if (town != null) {
+                return town.getName();
+            }
+        }
+        return "";
+    }
+
+    // Gets the Nation name for a user ID
+    public String getNationName(final UUID uuid) {
+        final Resident resident = this.getResident(uuid);
+
+        if (resident != null) {
+            final Nation nation = resident.getNationOrNull();
+            if (nation != null) {
+                return nation.getName();
+            }
+        }
+        return "";
+    }
+
     // Gets a Nation from the Towny API
     public Nation getNation(final Resident resident) {
         return resident.getNationOrNull();

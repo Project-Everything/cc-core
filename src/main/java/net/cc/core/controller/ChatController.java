@@ -88,7 +88,7 @@ public final class ChatController {
         }
 
         final String prefix = this.plugin.getServiceController().getPrefix(uuid);
-        final String key = "channel-" + channel.getKey();
+        final String key = this.getMessageKey(sender, channel);
         final boolean color = this.plugin.getServiceController().hasPermission(uuid,
                 CorePermission.CHAT_COLOR.get());
 
@@ -108,7 +108,9 @@ public final class ChatController {
                 Placeholder.parsed("user_prefix", prefix),
                 Placeholder.parsed("server", server.toString()),
                 Placeholder.parsed("message", this.plugin.getMiniMessage().serialize(messageComponent)),
-                Placeholder.parsed("role", this.plugin.getServiceController().getTownyTitle(uuid))
+                Placeholder.parsed("role", this.plugin.getServiceController().getTownyTitle(uuid)),
+                Placeholder.parsed("town", this.plugin.getServiceController().getTownName(uuid)),
+                Placeholder.parsed("nation", this.plugin.getServiceController().getNationName(uuid))
         );
 
         // Send chat message
@@ -373,5 +375,25 @@ public final class ChatController {
         }
 
         return uuids.size() < 2;
+    }
+
+    // Gets the message key for a chat message
+    private String getMessageKey(final CorePlayer corePlayer, final CoreChannel channel) {
+        final UUID uuid = corePlayer.getUniqueId();
+
+        switch (channel) {
+            case EARTH_GLOBAL_CHAT -> {
+                if (this.plugin.getServiceController().hasNation(uuid)) {
+                    return "channel-earth-global-nation";
+                }
+                if (this.plugin.getServiceController().hasTown(uuid)) {
+                    return "channel-earth-global-town";
+                }
+                return "channel-earth-global";
+            }
+            default -> {
+                return "channel-" + channel.getKey();
+            }
+        }
     }
 }
