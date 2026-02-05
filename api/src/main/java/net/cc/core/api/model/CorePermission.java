@@ -10,6 +10,7 @@ public enum CorePermission {
 
     CHANNEL_GLOBAL("cc.channel.global"),
     CHANNEL_STAFF_CHAT("cc.channel.staffchat"),
+    CHANNEL_HELPER_CHAT("cc.channel.helperchat"),
     CHANNEL_MOD_CHAT("cc.channel.modchat"),
     CHANNEL_ADMIN_CHAT("cc.channel.adminchat"),
 

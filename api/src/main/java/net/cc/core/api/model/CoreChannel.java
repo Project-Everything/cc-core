@@ -23,6 +23,13 @@ public enum CoreChannel {
             CorePermission.CHANNEL_STAFF_CHAT,
             true
     ),
+    HELPER_CHAT(
+            "helperchat",
+            "helperchat",
+            List.of("hc"),
+            CorePermission.CHANNEL_HELPER_CHAT,
+            true
+    ),
     MOD_CHAT(
             "modchat",
             "modchat",

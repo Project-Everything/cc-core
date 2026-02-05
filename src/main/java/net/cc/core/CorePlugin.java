@@ -133,6 +133,7 @@ public final class CorePlugin extends JavaPlugin {
 
             // Register channel commands
             new ChannelCommand(this, CoreChannel.STAFF_CHAT).register(registrar);
+            new ChannelCommand(this, CoreChannel.HELPER_CHAT).register(registrar);
             new ChannelCommand(this, CoreChannel.MOD_CHAT).register(registrar);
             new ChannelCommand(this, CoreChannel.ADMIN_CHAT).register(registrar);
 
