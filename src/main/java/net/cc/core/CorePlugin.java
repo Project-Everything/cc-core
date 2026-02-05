@@ -88,6 +88,9 @@ public final class CorePlugin extends JavaPlugin {
 
     public void reload() {
         // Reload plugin
+        this.dataController.close();
+        this.redisController.close();
+
         this.configController.initialize();
         this.redisController.initialize();
         this.dataController.initialize();
