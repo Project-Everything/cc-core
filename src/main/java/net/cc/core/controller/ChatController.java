@@ -166,6 +166,7 @@ public final class ChatController {
         final CoreServer server = message.server();
         final CoreChannel channel = message.channel();
         final Component component = this.plugin.getMiniMessage().deserialize(message.formattedMessage());
+        final String permission = channel.getPermission().get();
 
         // Check if message has already been handled
         if (!(local) && this.plugin.getCoreServer().equals(server)) {
@@ -179,7 +180,7 @@ public final class ChatController {
                 final CorePlayer viewingCorePlayer = this.plugin.getPlayerController().getPlayer(viewingPlayer);
 
                 // Send spy message
-                if (viewingCorePlayer.isSpying()) {
+                if (viewingCorePlayer.isSpying() && viewingPlayer.hasPermission(permission)) {
                     this.sendChatSpyMessage(senderCorePlayer, viewingPlayer, message.message());
                 }
             });
@@ -188,22 +189,10 @@ public final class ChatController {
 
         this.plugin.getServer().getOnlinePlayers().forEach(viewingPlayer -> {
             final CorePlayer viewingCorePlayer = this.plugin.getPlayerController().getPlayer(viewingPlayer);
-            final String permission = channel.getPermission().get();
-
-            // Check if player can view channel
-            boolean attempt = viewingPlayer.hasPermission(permission);
             boolean visible = false;
 
-            // Check if player has sender blocked
-            if (viewingCorePlayer.getBlocked().contains(message.sender())) {
-                viewingPlayer.sendMessage(this.plugin.getConfigController().getMessage("channel-blocked",
-                        Placeholder.component("message", component))
-                );
-                attempt = false;
-            }
-
-            if (attempt) {
-                // Attempt to handle message
+            if (viewingPlayer.hasPermission(permission)) {
+                // Handle message
                 switch (channel) {
                     case PLOTS_LOCAL_CHAT -> {
                         final Plot senderPlot = this.plugin.getServiceController().getPlot(message.sender());
@@ -274,17 +263,25 @@ public final class ChatController {
                     }
                     default -> visible = true;
                 }
-            }
 
-            if (visible) {
-                // Send message to player
-                viewingPlayer.sendMessage(component);
-            } else {
-                final CorePlayer corePlayer = this.plugin.getPlayerController().getPlayer(message.sender());
+                if (visible) {
+                    // Send message to player
+                    if (viewingCorePlayer.getBlocked().contains(message.sender())) {
+                        // Send blocked message
+                        viewingPlayer.sendMessage(this.plugin.getConfigController().getMessage("channel-blocked",
+                                Placeholder.component("message", component))
+                        );
+                    } else {
+                        // Send regular message
+                        viewingPlayer.sendMessage(component);
+                    }
+                } else {
+                    final CorePlayer corePlayer = this.plugin.getPlayerController().getPlayer(message.sender());
 
-                // Send spy message
-                if (viewingCorePlayer.isSpying()) {
-                    this.sendChatSpyMessage(corePlayer, viewingPlayer, message.message());
+                    // Send spy message
+                    if (viewingCorePlayer.isSpying()) {
+                        this.sendChatSpyMessage(corePlayer, viewingPlayer, message.message());
+                    }
                 }
             }
         });
@@ -316,6 +313,11 @@ public final class ChatController {
         }
 
         this.plugin.getServer().getOnlinePlayers().forEach(viewingPlayer -> {
+            if (viewingPlayer.getUniqueId().equals(targetCorePlayer.getUniqueId())) {
+                // Skip target player
+                return;
+            }
+
             final CorePlayer viewingCorePlayer = this.plugin.getPlayerController().getPlayer(viewingPlayer);
 
             // Send spy message
