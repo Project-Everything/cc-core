@@ -43,7 +43,7 @@ public final class ListCommand {
         // Iterate through all CorePlayer instances and add their display names to the list
         this.plugin.getPlayerController().getPlayers().forEach(corePlayer -> {
             if (!(corePlayer.isOnline())) return;
-            if (corePlayer.isVanished() && !(sender.hasPermission(CorePermission.COMMAND_LIST.get()))) return;
+            if (corePlayer.isVanished() && !(sender.hasPermission(CorePermission.COMMAND_VANISH.get()))) return;
 
             final Component component = this.plugin.getPlayerController().getPlayerComponent(corePlayer);
             components.add(component);

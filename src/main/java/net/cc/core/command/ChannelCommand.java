@@ -26,15 +26,15 @@ public final class ChannelCommand {
 
     // Registers the command
     public void register(final Commands registrar) {
-        final var command = Commands.literal(channel.getCommand())
-                .requires(stack -> stack.getSender().hasPermission(channel.getPermission().get()))
+        final var command = Commands.literal(this.channel.getCommand())
+                .requires(stack -> stack.getSender().hasPermission(this.channel.getPermission().get()))
                 .then(Commands.argument("message", StringArgumentType.greedyString())
                         .executes(this::executeArgs))
                 .executes(this::execute)
                 .build();
 
-        final String description = "Chat in the " + channel.getCommand() + " channel";
-        registrar.register(command, description, channel.getAliases());
+        final String description = "Chat in the " + this.channel.getCommand() + " channel";
+        registrar.register(command, description, this.channel.getAliases());
     }
 
     // Executes the command
@@ -48,14 +48,14 @@ public final class ChannelCommand {
         // Check if player is already in channel
         if (corePlayer.getChannel(this.plugin.getCoreServer()) == this.channel) {
             player.sendMessage(this.plugin.getConfigController().getMessage("command-channel-current",
-                    Placeholder.parsed("channel", channel.getCommand())));
+                    Placeholder.parsed("channel", this.channel.getCommand())));
             return 0;
         }
 
         // Set channel
         corePlayer.setChannel(this.plugin.getCoreServer(), this.channel);
         player.sendMessage(this.plugin.getConfigController().getMessage("command-channel",
-                Placeholder.parsed("channel", channel.getCommand())));
+                Placeholder.parsed("channel", this.channel.getCommand())));
 
         return Command.SINGLE_SUCCESS;
     }
@@ -70,7 +70,7 @@ public final class ChannelCommand {
 
         // Handle chat message
         final String message = ctx.getArgument("message", String.class);
-        this.plugin.getChatController().sendChatMessage(corePlayer, channel, message);
+        this.plugin.getChatController().sendChatMessage(corePlayer, this.channel, message);
 
         return Command.SINGLE_SUCCESS;
     }
