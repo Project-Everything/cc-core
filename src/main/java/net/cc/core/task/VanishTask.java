@@ -37,7 +37,7 @@ public final class VanishTask extends BukkitRunnable {
                 // Add invisibility to vanished player
                 if (corePlayer.isVanished()) {
                     player.setCollidable(false);
-                    player.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, 5, 1, false, true));
+                    player.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, 20, 1, false, true));
                 }
 
                 // Toggle visibility of player
