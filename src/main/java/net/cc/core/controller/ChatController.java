@@ -193,9 +193,6 @@ public final class ChatController {
             boolean visible = false;
 
             if (viewingPlayer.hasPermission(permission)) {
-                this.plugin.getComponentLogger().warn("viewing player: {}", viewingPlayer.getName());
-                this.plugin.getComponentLogger().warn("viewing player has permission: {}", permission);
-
                 // Handle message
                 switch (channel) {
                     case PLOTS_LOCAL_CHAT -> {
@@ -313,6 +310,7 @@ public final class ChatController {
                 return;
             } else {
                 targetPlayer.sendMessage(component);
+                targetCorePlayer.setRecent(message.sender());
             }
         }
 
