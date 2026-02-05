@@ -190,6 +190,7 @@ public final class PlayerController {
     public int getPlayerCount(final Player player) {
         int count = 0;
         for (final CorePlayer onlineCorePlayer : this.getPlayers()) {
+            if (!(onlineCorePlayer.isOnline())) continue;
             if (onlineCorePlayer.isVanished() && !(player.hasPermission(CorePermission.COMMAND_VANISH.get()))) continue;
             count++;
         }
