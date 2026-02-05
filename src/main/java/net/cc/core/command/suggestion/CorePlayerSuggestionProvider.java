@@ -37,7 +37,7 @@ public final class CorePlayerSuggestionProvider implements SuggestionProvider<Co
 
                     if (requireOnline) {
                         // Hide vanished players from online list
-                        if (!(canSeeVanished)) return;
+                        if (corePlayer.isVanished() && !(canSeeVanished)) return;
                     }
 
                     // Hide offline players

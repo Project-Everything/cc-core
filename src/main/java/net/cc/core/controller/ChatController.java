@@ -44,6 +44,7 @@ public final class ChatController {
         if (player == null) {
             return;
         }
+
         // Check if player has permission
         final String permission = channel.getPermission().get();
         if (!(player.hasPermission(permission))) {
@@ -192,6 +193,9 @@ public final class ChatController {
             boolean visible = false;
 
             if (viewingPlayer.hasPermission(permission)) {
+                this.plugin.getComponentLogger().debug("viewing player: {}", viewingPlayer.getName());
+                this.plugin.getComponentLogger().debug("viewing player has permission: {}", permission);
+
                 // Handle message
                 switch (channel) {
                     case PLOTS_LOCAL_CHAT -> {
@@ -264,7 +268,7 @@ public final class ChatController {
                     default -> visible = true;
                 }
 
-                if (visible) {
+                if (viewingPlayer.hasPermission(permission) && visible) {
                     // Send message to player
                     if (viewingCorePlayer.getBlocked().contains(message.sender())) {
                         // Send blocked message
@@ -279,7 +283,7 @@ public final class ChatController {
                     final CorePlayer corePlayer = this.plugin.getPlayerController().getPlayer(message.sender());
 
                     // Send spy message
-                    if (viewingCorePlayer.isSpying()) {
+                    if (viewingPlayer.hasPermission(permission) && viewingCorePlayer.isSpying()) {
                         this.sendChatSpyMessage(corePlayer, viewingPlayer, message.message());
                     }
                 }
