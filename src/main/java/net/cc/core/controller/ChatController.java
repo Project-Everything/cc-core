@@ -172,12 +172,12 @@ public final class ChatController {
         final String permission = channel.getPermission().get();
 
         // Check if message has already been handled
-        if (!(local) && this.plugin.getCoreServer().equals(server)) {
+        if (!(local) && this.plugin.getCoreServer().name().equals(server.name())) {
             return;
         }
 
         // Check if message can be sent on this server
-        if (!(this.plugin.getCoreServer().equals(server)) && !(channel.isCrossServer())) {
+        if (!(this.plugin.getCoreServer().name().equals(server.name())) && !(channel.isCrossServer())) {
             this.plugin.getServer().getOnlinePlayers().forEach(viewingPlayer -> {
                 final CorePlayer senderCorePlayer = this.plugin.getPlayerController().getPlayer(message.sender());
                 final CorePlayer viewingCorePlayer = this.plugin.getPlayerController().getPlayer(viewingPlayer);
