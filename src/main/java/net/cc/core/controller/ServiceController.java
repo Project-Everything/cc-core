@@ -63,6 +63,11 @@ public final class ServiceController {
         return resident.getTownOrNull();
     }
 
+    // Gets a Nation from the Towny API
+    public Nation getNation(final Resident resident) {
+        return resident.getNationOrNull();
+    }
+
     // Checks if a player has a Town
     public boolean hasTown(final UUID uuid) {
         final Resident resident = this.getResident(uuid);
@@ -97,12 +102,14 @@ public final class ServiceController {
 
     // Gets the Town name for a user ID
     public String getTownName(final UUID uuid) {
-        final Resident resident = this.getResident(uuid);
+        if (this.plugin.getCoreServer() == CoreServer.EARTH) {
+            final Resident resident = this.getResident(uuid);
 
-        if (resident != null) {
-            final Town town = resident.getTownOrNull();
-            if (town != null) {
-                return town.getName();
+            if (resident != null) {
+                final Town town = resident.getTownOrNull();
+                if (town != null) {
+                    return town.getName();
+                }
             }
         }
         return "";
@@ -110,20 +117,17 @@ public final class ServiceController {
 
     // Gets the Nation name for a user ID
     public String getNationName(final UUID uuid) {
-        final Resident resident = this.getResident(uuid);
+        if (this.plugin.getCoreServer() == CoreServer.EARTH) {
+            final Resident resident = this.getResident(uuid);
 
-        if (resident != null) {
-            final Nation nation = resident.getNationOrNull();
-            if (nation != null) {
-                return nation.getName();
+            if (resident != null) {
+                final Nation nation = resident.getNationOrNull();
+                if (nation != null) {
+                    return nation.getName();
+                }
             }
         }
         return "";
-    }
-
-    // Gets a Nation from the Towny API
-    public Nation getNation(final Resident resident) {
-        return resident.getNationOrNull();
     }
 
     // Gets a Resident's title from the Towny API
