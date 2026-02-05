@@ -62,7 +62,7 @@ public final class CorePlugin extends JavaPlugin {
         this.miniMessageFull = MiniMessage.miniMessage();
 
         // Load config
-        this.reload();
+        this.load();
 
         // Warn console about default server type
         if (this.coreServer == CoreServer.DEFAULT) {
@@ -91,6 +91,11 @@ public final class CorePlugin extends JavaPlugin {
         this.dataController.close();
         this.redisController.close();
 
+        this.load();
+    }
+
+    private void load() {
+        // Load plugin
         this.configController.initialize();
         this.redisController.initialize();
         this.dataController.initialize();
