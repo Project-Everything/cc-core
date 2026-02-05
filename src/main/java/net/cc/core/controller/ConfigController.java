@@ -163,7 +163,7 @@ public final class ConfigController {
         tagResolvers.add(Placeholder.parsed("prefix", this.getPrefix()));
 
         return message != null
-                ? this.plugin.getMiniMessageStrict().deserialize(message, tagResolvers.toArray(TagResolver[]::new))
+                ? this.plugin.getMiniMessageFull().deserialize(message, tagResolvers.toArray(TagResolver[]::new))
                 .decorationIfAbsent(
                         TextDecoration.ITALIC,
                         TextDecoration.State.FALSE

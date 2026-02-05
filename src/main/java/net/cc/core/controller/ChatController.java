@@ -96,7 +96,7 @@ public final class ChatController {
                 ? this.plugin.getMiniMessage().deserialize(message)
                 : PlainTextComponentSerializer.plainText().deserialize(message);
 
-        final String nickname = this.plugin.getMiniMessageStrict().serialize(sender.getNickname());
+        final String nickname = this.plugin.getMiniMessageFull().serialize(sender.getNickname());
         final String fullNickname = nickname.isEmpty() || nickname.equals("<!italic></!italic>")
                 ? ""
                 : " <yellow>(" + nickname + ")</yellow>";

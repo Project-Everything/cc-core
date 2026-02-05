@@ -39,7 +39,7 @@ public final class CorePlugin extends JavaPlugin {
     @Setter
     private boolean debugMode;
     private MiniMessage miniMessage;
-    private MiniMessage miniMessageStrict;
+    private MiniMessage miniMessageFull;
     private PlayerQueueTask playerQueueTask;
     private PlayerSyncTask playerSyncTask;
     private VanishTask vanishTask;
@@ -59,10 +59,7 @@ public final class CorePlugin extends JavaPlugin {
                 .strict(false)
                 .build();
 
-        this.miniMessageStrict = MiniMessage.builder()
-                .tags(TagResolver.standard())
-                .strict(true)
-                .build();
+        this.miniMessageFull = MiniMessage.miniMessage();
 
         // Load config
         this.reload();
