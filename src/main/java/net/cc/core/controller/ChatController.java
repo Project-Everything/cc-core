@@ -108,7 +108,7 @@ public final class ChatController {
                 Placeholder.parsed("user_prefix", prefix),
                 Placeholder.parsed("server", server.toString()),
                 Placeholder.parsed("message", this.plugin.getMiniMessage().serialize(messageComponent)),
-                Placeholder.parsed("role", this.plugin.getServiceController().getTownyTitle(uuid)),
+                Placeholder.parsed("title", this.plugin.getServiceController().getTownyTitle(uuid)),
                 Placeholder.parsed("town", this.plugin.getServiceController().getTownName(uuid)),
                 Placeholder.parsed("nation", this.plugin.getServiceController().getNationName(uuid))
         );
@@ -384,12 +384,18 @@ public final class ChatController {
         switch (channel) {
             case EARTH_GLOBAL_CHAT -> {
                 if (this.plugin.getServiceController().hasNation(uuid)) {
-                    return "channel-earth-global-nation";
+                    return "channel-" + channel.getKey() + "-nation";
                 }
                 if (this.plugin.getServiceController().hasTown(uuid)) {
-                    return "channel-earth-global-town";
+                    return "channel-" + channel.getKey() + "-town";
                 }
-                return "channel-earth-global";
+                return "channel-" + channel.getKey();
+            }
+            case EARTH_TOWN_CHAT, EARTH_NATION_CHAT -> {
+                if (this.plugin.getServiceController().hasTitle(uuid)) {
+                    return "channel-" + channel.getKey() + "-title";
+                }
+                return "channel-" + channel.getKey();
             }
             default -> {
                 return "channel-" + channel.getKey();

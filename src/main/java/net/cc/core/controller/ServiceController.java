@@ -13,7 +13,6 @@ import net.cc.core.api.model.CoreServer;
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import net.luckperms.api.LuckPerms;
 import net.luckperms.api.model.user.User;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.UUID;
 
@@ -34,7 +33,7 @@ public final class ServiceController {
     }
 
     // Gets a player's prefix from LuckPerms as a String
-    public @NotNull String getPrefix(final UUID uuid) {
+    public String getPrefix(final UUID uuid) {
         final User user = this.luckPerms.getUserManager().loadUser(uuid).join();
         final String def = PlainTextComponentSerializer.plainText().serialize(
                 this.plugin.getConfigController().getMessage("default-prefix")
@@ -43,17 +42,6 @@ public final class ServiceController {
         if (user != null) {
             final String prefix = user.getCachedData().getMetaData().getPrefix();
             return prefix != null ? prefix : def;
-        }
-        return def;
-    }
-
-    // Gets a player's primary group from Luckperms as a String
-    public @NotNull String getGroup(final UUID id) {
-        final User user = this.luckPerms.getUserManager().loadUser(id).join();
-        final String def = "default";
-
-        if (user != null) {
-            return user.getPrimaryGroup();
         }
         return def;
     }
@@ -97,6 +85,16 @@ public final class ServiceController {
         return false;
     }
 
+    // Checks if a player has a title
+    public boolean hasTitle(final UUID uuid) {
+        final Resident resident = this.getResident(uuid);
+
+        if (resident != null) {
+            return !(resident.getTitle().isEmpty()) && !(resident.getTitle().isBlank());
+        }
+        return false;
+    }
+
     // Gets the Town name for a user ID
     public String getTownName(final UUID uuid) {
         final Resident resident = this.getResident(uuid);
@@ -134,7 +132,7 @@ public final class ServiceController {
             final Resident resident = this.getResident(uuid);
 
             if (resident.hasTitle()) {
-                return this.getResident(uuid).getTitle() + " ";
+                return this.getResident(uuid).getTitle();
             }
         }
         return "";
