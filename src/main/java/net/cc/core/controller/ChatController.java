@@ -115,7 +115,7 @@ public final class ChatController {
         final String formattedMessage = this.plugin.getMiniMessage().serialize(component);
         final ChatMessage chatMessage = new ChatMessage(
                 sender.getUniqueId(),
-                sender.getChannel(server),
+                channel,
                 server,
                 System.currentTimeMillis(),
                 message,
@@ -193,9 +193,6 @@ public final class ChatController {
             boolean visible = false;
 
             if (viewingPlayer.hasPermission(permission)) {
-                this.plugin.getComponentLogger().debug("viewing player: {}", viewingPlayer.getName());
-                this.plugin.getComponentLogger().debug("viewing player has permission: {}", permission);
-
                 // Handle message
                 switch (channel) {
                     case PLOTS_LOCAL_CHAT -> {
