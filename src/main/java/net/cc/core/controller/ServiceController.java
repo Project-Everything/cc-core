@@ -9,9 +9,10 @@ import com.plotsquared.core.player.PlotPlayer;
 import com.plotsquared.core.plot.Plot;
 import lombok.RequiredArgsConstructor;
 import net.cc.core.CorePlugin;
+import net.cc.core.api.model.CoreGroup;
 import net.cc.core.api.model.CoreServer;
-import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import net.luckperms.api.LuckPerms;
+import net.luckperms.api.LuckPermsProvider;
 import net.luckperms.api.model.user.User;
 
 import java.util.UUID;
@@ -29,21 +30,23 @@ public final class ServiceController {
 
     // Initializes the controller
     public void initialize() {
-        this.luckPerms = this.plugin.getServer().getServicesManager().load(LuckPerms.class);
+        this.luckPerms = LuckPermsProvider.get();
     }
 
-    // Gets a player's prefix from LuckPerms as a String
-    public String getPrefix(final UUID uuid) {
+    // Gets a player's group from LuckPerms
+    public CoreGroup getGroup(final UUID uuid) {
         final User user = this.luckPerms.getUserManager().loadUser(uuid).join();
-        final String def = PlainTextComponentSerializer.plainText().serialize(
-                this.plugin.getConfigController().getMessage("default-prefix")
-        );
 
         if (user != null) {
-            final String prefix = user.getCachedData().getMetaData().getPrefix();
-            return prefix != null ? prefix : def;
+            final String groupName = user.getPrimaryGroup();
+            try {
+                return CoreGroup.valueOf(groupName.toUpperCase());
+            } catch (final IllegalArgumentException e) {
+                this.plugin.getComponentLogger().error("Unable to load group '{}' for player '{}'", groupName, user.getUsername());
+                return CoreGroup.DEFAULT;
+            }
         }
-        return def;
+        return CoreGroup.DEFAULT;
     }
 
     // Checks if a User has a permission in their cached data

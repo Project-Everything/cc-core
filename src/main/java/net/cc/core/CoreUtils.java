@@ -1,6 +1,7 @@
 package net.cc.core;
 
 import io.papermc.paper.command.brigadier.CommandSourceStack;
+import net.cc.core.api.model.CoreAlpha;
 import net.cc.core.api.model.CoreChannel;
 import net.cc.core.api.model.CoreServer;
 import net.cc.core.api.model.player.CorePlayer;
@@ -80,6 +81,24 @@ public final class CoreUtils {
                 .filter(s -> !(s.isEmpty()))
                 .map(UUID::fromString)
                 .toList());
+    }
+
+    // Creates a comma-delimited string from an Enum set
+    public static String enumSetToString(final Set<CoreAlpha> alphas) {
+        return alphas.stream()
+                .map(a -> a.toString().toUpperCase())
+                .collect(Collectors.joining(","));
+    }
+
+    // Create an Enum set from a comma-delimited string
+    public static Set<CoreAlpha> stringToEnumSet(final String string) {
+        if (string == null || string.isEmpty()) {
+            return new HashSet<>();
+        }
+
+        return Arrays.stream(string.split(","))
+                .map(String::trim)
+                .map(s -> CoreAlpha.valueOf(s.toUpperCase())).collect(Collectors.toSet());
     }
 
 }

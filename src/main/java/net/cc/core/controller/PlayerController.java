@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import net.cc.core.Constants;
 import net.cc.core.CorePlugin;
+import net.cc.core.api.model.CoreGroup;
 import net.cc.core.api.model.CorePermission;
 import net.cc.core.api.model.CoreServer;
 import net.cc.core.api.model.player.CorePlayer;
@@ -59,8 +60,9 @@ public final class PlayerController {
                 corePlayer.setJoinedAt(System.currentTimeMillis());
             }
 
-            // Update username
+            // Update player information
             this.updateUsername(corePlayer, username);
+            this.updateGroup(corePlayer);
 
             return CompletableFuture.completedFuture(corePlayer);
         }
@@ -68,8 +70,9 @@ public final class PlayerController {
         // Query database for player
         return this.plugin.getDataController().queryPlayer(player.getUniqueId()).thenCompose(dbPlayer -> {
             if (dbPlayer != null) {
-                // Update username
+                // Update player information
                 this.updateUsername(dbPlayer, username);
+                this.updateGroup(dbPlayer);
 
                 // Player was found in the database
                 dbPlayer.setName(username);
@@ -367,6 +370,16 @@ public final class PlayerController {
             corePlayer.setName(username);
             corePlayer.setDisplayName(this.plugin.getConfigController().getMessage("default-display-name",
                     Placeholder.parsed("username", username)));
+        }
+    }
+
+    // Updates a player's group
+    private void updateGroup(final CorePlayer corePlayer) {
+        // Check if group matches
+        final CoreGroup newGroup = this.plugin.getServiceController().getGroup(corePlayer.getUniqueId());
+        if (corePlayer.getGroup() != newGroup) {
+            // Group does not match, update group
+            corePlayer.setGroup(newGroup);
         }
     }
 }

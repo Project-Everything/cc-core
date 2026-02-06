@@ -1,12 +1,11 @@
 package net.cc.core.api.model.player;
 
-import net.cc.core.api.model.CoreChannel;
-import net.cc.core.api.model.CoreServer;
-import net.cc.core.api.model.CoreStanding;
+import net.cc.core.api.model.*;
 import net.kyori.adventure.text.Component;
 
 import java.util.EnumMap;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 /**
@@ -35,6 +34,20 @@ public interface CorePlayer {
     CoreServer getServer();
 
     void setServer(final CoreServer server);
+
+    CoreGroup getGroup();
+
+    void setGroup(final CoreGroup group);
+
+    Component getPrefix();
+
+    Set<CoreAlpha> getAlphas();
+
+    void setAlphas(final Set<CoreAlpha> alphas);
+
+    void addAlpha(final CoreAlpha alpha);
+
+    void removeAlpha(final CoreAlpha alpha);
 
     EnumMap<CoreServer, CoreChannel> getChannels();
 

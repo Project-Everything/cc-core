@@ -3,9 +3,7 @@ package net.cc.core.model.player;
 import lombok.Getter;
 import net.cc.core.CorePlugin;
 import net.cc.core.CoreUtils;
-import net.cc.core.api.model.CoreChannel;
-import net.cc.core.api.model.CoreServer;
-import net.cc.core.api.model.CoreStanding;
+import net.cc.core.api.model.*;
 import net.cc.core.api.model.player.CorePlayer;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -14,6 +12,7 @@ import org.bukkit.entity.Player;
 
 import java.util.*;
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 /**
@@ -30,6 +29,8 @@ public final class PaperCorePlayer implements CorePlayer {
     private long joinedAt;
     private String name;
     private CoreServer server;
+    private CoreGroup group;
+    private Set<CoreAlpha> alphas;
     private EnumMap<CoreServer, CoreChannel> channels;
     private CoreStanding standing;
     private UUID recent;
@@ -47,6 +48,7 @@ public final class PaperCorePlayer implements CorePlayer {
     private int votes;
     private int meows;
     private final Consumer<PaperCorePlayer> saveConsumer;
+    private final Supplier<Component> prefixSupplier;
 
     // Constructor
     public PaperCorePlayer(
@@ -59,6 +61,8 @@ public final class PaperCorePlayer implements CorePlayer {
         this.joinedAt = System.currentTimeMillis();
         this.name = player.getName();
         this.server = plugin.getCoreServer();
+        this.group = plugin.getServiceController().getGroup(player.getUniqueId());
+        this.alphas = new HashSet<>();
         this.channels = this.createNewChannelMap();
         this.standing = CoreStanding.EXCELLENT;
         this.recent = player.getUniqueId();
@@ -76,6 +80,7 @@ public final class PaperCorePlayer implements CorePlayer {
         this.votes = 0;
         this.meows = 0;
         this.saveConsumer = plugin.getPlayerQueueTask()::queue;
+        this.prefixSupplier = () -> plugin.getConfigController().getMessage("group-" + this.group.getKey());
     }
 
     // Constructor
@@ -87,6 +92,8 @@ public final class PaperCorePlayer implements CorePlayer {
             final long joinedAt,
             final String name,
             final CoreServer server,
+            final CoreGroup group,
+            final Set<CoreAlpha> alphas,
             final EnumMap<CoreServer, CoreChannel> channels,
             final CoreStanding standing,
             final UUID recent,
@@ -110,6 +117,8 @@ public final class PaperCorePlayer implements CorePlayer {
         this.joinedAt = joinedAt;
         this.name = name;
         this.server = server;
+        this.group = group;
+        this.alphas = alphas;
         this.channels = channels;
         this.standing = standing;
         this.recent = recent;
@@ -127,6 +136,7 @@ public final class PaperCorePlayer implements CorePlayer {
         this.votes = votes;
         this.meows = meows;
         this.saveConsumer = plugin.getPlayerQueueTask()::queue;
+        this.prefixSupplier = () -> plugin.getConfigController().getMessage("group-" + this.group.getKey());
     }
 
     // Sets the player's updated at value
@@ -166,6 +176,42 @@ public final class PaperCorePlayer implements CorePlayer {
             this.server = server;
             this.save();
         }
+    }
+
+    // Sets the player's group
+    @Override
+    public void setGroup(final CoreGroup group) {
+        if (!(Objects.equals(this.group, group))) {
+            this.group = group;
+            this.save();
+        }
+    }
+
+    // Gets the player's prefix
+    @Override
+    public Component getPrefix() {
+        return this.prefixSupplier.get();
+    }
+
+    // Sets the player's alphas
+    @Override
+    public void setAlphas(final Set<CoreAlpha> alphas) {
+        if (!(Objects.equals(this.alphas, alphas))) {
+            this.alphas = alphas;
+            this.save();
+        }
+    }
+
+    // Adds an alpha to the player's alphas
+    @Override
+    public void addAlpha(final CoreAlpha alpha) {
+        this.alphas.add(alpha);
+    }
+
+    // Removes an alpha from the player's alphas
+    @Override
+    public void removeAlpha(final CoreAlpha alpha) {
+        this.alphas.remove(alpha);
     }
 
     @Override
@@ -399,6 +445,8 @@ public final class PaperCorePlayer implements CorePlayer {
     // Creates a Memento pattern for this object
     public PaperCorePlayerMemento createMemento(final CorePlugin plugin) {
         final String server = this.server.toString();
+        final String group = this.group.toString();
+        final String alphas = CoreUtils.enumSetToString(this.alphas);
         final String channels = CoreUtils.enumMapToString(this.channels);
         final String standing = this.standing.toString();
         final String displayName = plugin.getMiniMessage().serialize(this.displayName);
@@ -413,6 +461,8 @@ public final class PaperCorePlayer implements CorePlayer {
                 this.joinedAt,
                 this.name,
                 server,
+                group,
+                alphas,
                 channels,
                 standing,
                 this.recent,

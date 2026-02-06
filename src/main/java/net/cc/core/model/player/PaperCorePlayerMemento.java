@@ -2,14 +2,13 @@ package net.cc.core.model.player;
 
 import net.cc.core.CorePlugin;
 import net.cc.core.CoreUtils;
-import net.cc.core.api.model.CoreChannel;
-import net.cc.core.api.model.CoreServer;
-import net.cc.core.api.model.CoreStanding;
+import net.cc.core.api.model.*;
 import net.cc.core.api.model.player.CorePlayer;
 import net.kyori.adventure.text.Component;
 
 import java.util.EnumMap;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 /**
@@ -24,6 +23,8 @@ public record PaperCorePlayerMemento(
         long joinedAt,
         String username,
         String server,
+        String group,
+        String alphas,
         String channels,
         String standing,
         UUID recent,
@@ -44,6 +45,8 @@ public record PaperCorePlayerMemento(
     // Creates a CorePlayer object from a Memento pattern
     public CorePlayer toCorePlayer(final CorePlugin plugin) {
         final CoreServer newServer = CoreServer.valueOf(this.server.toUpperCase());
+        final CoreGroup newGroup = CoreGroup.valueOf(this.group.toUpperCase());
+        final Set<CoreAlpha> newAlphas = CoreUtils.stringToEnumSet(this.alphas);
         final EnumMap<CoreServer, CoreChannel> newChannels = CoreUtils.stringToEnumMap(this.channels);
         final CoreStanding newStanding = CoreStanding.valueOf(this.standing.toUpperCase());
         final Component newDisplayName = plugin.getMiniMessage().deserialize(this.displayName);
@@ -59,6 +62,8 @@ public record PaperCorePlayerMemento(
                 this.joinedAt,
                 this.username,
                 newServer,
+                newGroup,
+                newAlphas,
                 newChannels,
                 newStanding,
                 this.recent,

@@ -6,9 +6,7 @@ import com.zaxxer.hikari.pool.HikariPool;
 import lombok.RequiredArgsConstructor;
 import net.cc.core.CorePlugin;
 import net.cc.core.CoreUtils;
-import net.cc.core.api.model.CoreChannel;
-import net.cc.core.api.model.CoreServer;
-import net.cc.core.api.model.CoreStanding;
+import net.cc.core.api.model.*;
 import net.cc.core.api.model.player.CorePlayer;
 import net.cc.core.model.config.StorageConfig;
 import net.cc.core.model.player.PaperCorePlayer;
@@ -60,9 +58,9 @@ public final class DataController {
 
         this.sqlSavePlayer = """
                 INSERT INTO core_players
-                (id, created_at, updated_at, joined_at, name, server, channels, standing, recent, display_name, nickname, friends, blocked, online, vanished, spying, allow_tpa, allow_mention, confirmed, coins, votes, meows)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE
-                created_at = ?, updated_at = ?, joined_at = ?, name = ?, server = ?, channels = ?, standing = ?, recent = ?, display_name = ?, nickname = ?, friends = ?, blocked = ?, online = ?, vanished = ?, spying = ?, allow_tpa = ?, allow_mention = ?, confirmed = ?, coins = ?, votes = ?, meows = ?
+                (id, created_at, updated_at, joined_at, name, server, core_group, alphas, channels, standing, recent, display_name, nickname, friends, blocked, online, vanished, spying, allow_tpa, allow_mention, confirmed, coins, votes, meows)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE
+                created_at = ?, updated_at = ?, joined_at = ?, name = ?, server = ?, core_group = ?, alphas = ?, channels = ?, standing = ?, recent = ?, display_name = ?, nickname = ?, friends = ?, blocked = ?, online = ?, vanished = ?, spying = ?, allow_tpa = ?, allow_mention = ?, confirmed = ?, coins = ?, votes = ?, meows = ?
                 """;
         this.sqlConfirmAll = "UPDATE core_players SET confirmed = true;";
         this.sqlUnconfirmAll = "UPDATE core_players SET confirmed = false;";
@@ -77,6 +75,8 @@ public final class DataController {
                     joined_at LONG NOT NULL,
                     name TEXT NOT NULL,
                     server TEXT NOT NULL,
+                    core_group TEXT NOT NULL,
+                    alphas TEXT NOT NULL,
                     channels TEXT NOT NULL,
                     standing TEXT NOT NULL,
                     recent TEXT NOT NULL,
@@ -125,6 +125,7 @@ public final class DataController {
     public CompletableFuture<Void> savePlayer(final CorePlayer corePlayer) {
         return CompletableFuture.runAsync(() -> {
             try {
+                final String alphas = CoreUtils.enumSetToString(corePlayer.getAlphas());
                 final String channels = CoreUtils.enumMapToString(corePlayer.getChannels());
                 final String displayName = this.plugin.getMiniMessage().serialize(corePlayer.getDisplayName());
                 final String nickname = this.plugin.getMiniMessage().serialize(corePlayer.getNickname());
@@ -139,6 +140,8 @@ public final class DataController {
                         corePlayer.getJoinedAt(),
                         corePlayer.getName(),
                         corePlayer.getServer().toString(),
+                        corePlayer.getGroup().toString(),
+                        alphas,
                         channels,
                         corePlayer.getStanding().toString(),
                         corePlayer.getRecent().toString(),
@@ -161,6 +164,8 @@ public final class DataController {
                         corePlayer.getJoinedAt(),
                         corePlayer.getName(),
                         corePlayer.getServer().toString(),
+                        corePlayer.getGroup().toString(),
+                        alphas,
                         channels,
                         corePlayer.getStanding().toString(),
                         corePlayer.getRecent().toString(),
@@ -271,6 +276,8 @@ public final class DataController {
         final long joinedAt = resultSet.getLong("joined_at");
         final String name = resultSet.getString("name");
         final CoreServer server = CoreServer.valueOf(resultSet.getString("server"));
+        final CoreGroup group = CoreGroup.valueOf(resultSet.getString("core_group"));
+        final Set<CoreAlpha> alphas = CoreUtils.stringToEnumSet(resultSet.getString("alphas"));
         final EnumMap<CoreServer, CoreChannel> channels = CoreUtils.stringToEnumMap(resultSet.getString("channels"));
         final CoreStanding standing = CoreStanding.valueOf(resultSet.getString("standing"));
         final UUID recent = UUID.fromString(resultSet.getString("recent"));
@@ -296,6 +303,8 @@ public final class DataController {
                 joinedAt,
                 name,
                 server,
+                group,
+                alphas,
                 channels,
                 standing,
                 recent,

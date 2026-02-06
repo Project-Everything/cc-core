@@ -2,6 +2,7 @@ package net.cc.core.task;
 
 import lombok.RequiredArgsConstructor;
 import net.cc.core.CorePlugin;
+import net.cc.core.api.model.CoreGroup;
 import net.cc.core.api.model.player.CorePlayer;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -24,6 +25,12 @@ public final class PlayerSyncTask extends BukkitRunnable {
                 // Update player silently
                 corePlayer.setUpdatedAt(System.currentTimeMillis(), true);
                 corePlayer.setOnline(true, true);
+
+                // Set new player group if changed
+                final CoreGroup newGroup = this.plugin.getServiceController().getGroup(corePlayer.getUniqueId());
+                if (corePlayer.getGroup() != newGroup) {
+                    corePlayer.setGroup(newGroup);
+                }
 
                 this.plugin.getPlayerController().validateChannels(corePlayer);
                 this.plugin.getPlayerController().updatePlayer(corePlayer);

@@ -87,7 +87,6 @@ public final class ChatController {
             }
         }
 
-        final String prefix = this.plugin.getServiceController().getPrefix(uuid);
         final String key = this.getMessageKey(sender, channel);
         final boolean color = this.plugin.getServiceController().hasPermission(uuid,
                 CorePermission.CHAT_COLOR.get());
@@ -97,15 +96,12 @@ public final class ChatController {
                 : PlainTextComponentSerializer.plainText().deserialize(message);
 
         final String nickname = this.plugin.getMiniMessageFull().serialize(sender.getNickname());
-        final String fullNickname = nickname.isEmpty() || nickname.equals("<!italic></!italic>")
-                ? ""
-                : " <yellow>(" + nickname + ")</yellow>";
 
         final Component component = this.plugin.getConfigController().getMessage(key,
                 Placeholder.parsed("username", sender.getName()),
                 Placeholder.component("display_name", sender.getDisplayName()),
-                Placeholder.parsed("nickname", fullNickname),
-                Placeholder.parsed("user_prefix", prefix),
+                Placeholder.parsed("nickname", nickname),
+                Placeholder.component("user_prefix", sender.getPrefix()),
                 Placeholder.parsed("server", server.toString()),
                 Placeholder.parsed("message", this.plugin.getMiniMessage().serialize(messageComponent)),
                 Placeholder.parsed("title", this.plugin.getServiceController().getTownyTitle(uuid)),
@@ -382,6 +378,13 @@ public final class ChatController {
         final UUID uuid = corePlayer.getUniqueId();
 
         switch (channel) {
+            case PLOTS_LOCAL_CHAT -> {
+                final String nickname = PlainTextComponentSerializer.plainText().serialize(corePlayer.getNickname());
+                if (nickname.isBlank()) {
+                    return "channel-" + channel.getKey();
+                }
+                return "channel-" + channel.getKey() + "-nickname";
+            }
             case EARTH_GLOBAL_CHAT -> {
                 if (this.plugin.getServiceController().hasNation(uuid)) {
                     return "channel-" + channel.getKey() + "-nation";
@@ -391,7 +394,7 @@ public final class ChatController {
                 }
                 return "channel-" + channel.getKey();
             }
-            case EARTH_TOWN_CHAT, EARTH_NATION_CHAT -> {
+            case EARTH_LOCAL_CHAT, EARTH_TOWN_CHAT, EARTH_NATION_CHAT -> {
                 if (this.plugin.getServiceController().hasTitle(uuid)) {
                     return "channel-" + channel.getKey() + "-title";
                 }
