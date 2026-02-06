@@ -116,6 +116,12 @@ public final class PlayerListener implements Listener {
     // Handle the asynchronous chat event
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onAsyncChat(final AsyncChatEvent event) {
+        // Check if event is already canceled
+        if (event.isCancelled()) {
+            return;
+        }
+
+        // Cancel event
         event.setCancelled(true);
 
         final Player player = event.getPlayer();
