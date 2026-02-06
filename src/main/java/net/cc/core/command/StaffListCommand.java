@@ -46,10 +46,8 @@ public final class StaffListCommand {
             if (corePlayer.isVanished() && !(sender.hasPermission(CorePermission.COMMAND_VANISH.get()))) return;
             if (!(this.plugin.getServiceController().hasPermission(corePlayer.getUniqueId(), CorePermission.COMMAND_VANISH.get()))) return;
 
-            final String rank = this.plugin.getServiceController().getPrefix(corePlayer.getUniqueId());
-
             final Component component = this.plugin.getConfigController().getMessage("command-stafflist-player",
-                    Placeholder.parsed("rank", rank),
+                    Placeholder.component("rank", corePlayer.getPrefix()),
                     Placeholder.component("display_name", this.plugin.getPlayerController().getPlayerComponent(corePlayer)));
 
             components.add(component);
