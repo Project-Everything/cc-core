@@ -6,7 +6,7 @@ import net.kyori.adventure.text.format.TextColor;
 /**
  * Model enum for an alpha role.
  *
- * @since 1.1
+ * @since 1.2
  */
 public enum CoreAlpha {
     PLOTS_ALPHA(NamedTextColor.AQUA),

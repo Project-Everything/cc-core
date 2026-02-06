@@ -3,7 +3,7 @@ package net.cc.core.api.model;
 /**
  * Model enum for a permission group.
  *
- * @since 1.1
+ * @since 1.2
  */
 public enum CoreGroup {
     OWNER("owner"),
