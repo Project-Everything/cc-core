@@ -41,6 +41,12 @@ public final class PlayerController {
             for (final CorePlayer dbPlayer : dbPlayers) {
                 this.players.put(dbPlayer.getUniqueId(), dbPlayer);
             }
+
+            this.plugin.getComponentLogger().info("Loaded {} players", this.players.size());
+        }).exceptionally(e -> {
+            // Exception thrown during load
+            this.plugin.getComponentLogger().error("Unable to load players", e);
+            return null;
         });
     }
 
