@@ -58,9 +58,9 @@ public final class DataController {
 
         this.sqlSavePlayer = """
                 INSERT INTO core_players
-                (id, created_at, updated_at, joined_at, name, server, core_group, alphas, channels, standing, recent, display_name, nickname, friends, blocked, online, vanished, spying, allow_tpa, allow_mention, confirmed, coins, votes, meows)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE
-                created_at = ?, updated_at = ?, joined_at = ?, name = ?, server = ?, core_group = ?, alphas = ?, channels = ?, standing = ?, recent = ?, display_name = ?, nickname = ?, friends = ?, blocked = ?, online = ?, vanished = ?, spying = ?, allow_tpa = ?, allow_mention = ?, confirmed = ?, coins = ?, votes = ?, meows = ?
+                (id, created_at, updated_at, joined_at, name, server, core_group, alphas, channels, standing, recent, display_name, nickname, friends, blocked, online, vanished, spying, allow_tpa, allow_mention, confirmed, returning_player, coins, votes, meows)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE
+                created_at = ?, updated_at = ?, joined_at = ?, name = ?, server = ?, core_group = ?, alphas = ?, channels = ?, standing = ?, recent = ?, display_name = ?, nickname = ?, friends = ?, blocked = ?, online = ?, vanished = ?, spying = ?, allow_tpa = ?, allow_mention = ?, confirmed = ?, returning_player = ?, coins = ?, votes = ?, meows = ?
                 """;
         this.sqlConfirmAll = "UPDATE core_players SET confirmed = true;";
         this.sqlUnconfirmAll = "UPDATE core_players SET confirmed = false;";
@@ -90,6 +90,7 @@ public final class DataController {
                     allow_tpa BOOLEAN NOT NULL,
                     allow_mention BOOLEAN NOT NULL,
                     confirmed BOOLEAN NOT NULL,
+                    returning_player BOOLEAN NOT NULL,
                     coins INTEGER NOT NULL,
                     votes INTEGER NOT NULL,
                     meows INTEGER NOT NULL
@@ -155,6 +156,7 @@ public final class DataController {
                         corePlayer.isAllowTpa(),
                         corePlayer.isAllowMention(),
                         corePlayer.isConfirmed(),
+                        corePlayer.isReturningPlayer(),
                         corePlayer.getCoins(),
                         corePlayer.getVotes(),
                         corePlayer.getMeows(),
@@ -179,6 +181,7 @@ public final class DataController {
                         corePlayer.isAllowTpa(),
                         corePlayer.isAllowMention(),
                         corePlayer.isConfirmed(),
+                        corePlayer.isReturningPlayer(),
                         corePlayer.getCoins(),
                         corePlayer.getVotes(),
                         corePlayer.getMeows()
@@ -291,6 +294,7 @@ public final class DataController {
         final boolean allowTpa = resultSet.getBoolean("allow_tpa");
         final boolean allowMention = resultSet.getBoolean("allow_mention");
         final boolean confirmed = resultSet.getBoolean("confirmed");
+        final boolean returningPlayer = resultSet.getBoolean("returning_player");
         final int coins = resultSet.getInt("coins");
         final int votes = resultSet.getInt("votes");
         final int meows = resultSet.getInt("meows");
@@ -318,6 +322,7 @@ public final class DataController {
                 allowTpa,
                 allowMention,
                 confirmed,
+                returningPlayer,
                 coins,
                 votes,
                 meows

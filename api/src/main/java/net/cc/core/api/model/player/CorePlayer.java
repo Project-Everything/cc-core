@@ -113,6 +113,10 @@ public interface CorePlayer {
 
     void setConfirmed(final boolean confirmed, final boolean silent);
 
+    boolean isReturningPlayer();
+
+    void setReturningPlayer(final boolean returningPlayer);
+
     int getCoins();
 
     void setCoins(final int coins);

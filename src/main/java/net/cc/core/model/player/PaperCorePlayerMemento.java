@@ -38,6 +38,7 @@ public record PaperCorePlayerMemento(
         boolean allowTpa,
         boolean allowMention,
         boolean confirmed,
+        boolean returningPlayer,
         int coins,
         int votes,
         int meows
@@ -77,6 +78,7 @@ public record PaperCorePlayerMemento(
                 this.allowTpa,
                 this.allowMention,
                 this.confirmed,
+                this.returningPlayer,
                 this.coins,
                 this.votes,
                 this.meows

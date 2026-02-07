@@ -44,6 +44,7 @@ public final class PaperCorePlayer implements CorePlayer {
     private boolean allowTpa;
     private boolean allowMention;
     private boolean confirmed;
+    private boolean returningPlayer;
     private int coins;
     private int votes;
     private int meows;
@@ -76,6 +77,7 @@ public final class PaperCorePlayer implements CorePlayer {
         this.allowTpa = true;
         this.allowMention = true;
         this.confirmed = false;
+        this.returningPlayer = false;
         this.coins = 0;
         this.votes = 0;
         this.meows = 0;
@@ -107,6 +109,7 @@ public final class PaperCorePlayer implements CorePlayer {
             final boolean allowTpa,
             final boolean allowMention,
             final boolean confirmed,
+            final boolean returningPlayer,
             final int coins,
             final int votes,
             final int meows
@@ -132,6 +135,7 @@ public final class PaperCorePlayer implements CorePlayer {
         this.allowTpa = allowTpa;
         this.allowMention = allowMention;
         this.confirmed = confirmed;
+        this.returningPlayer = returningPlayer;
         this.coins = coins;
         this.votes = votes;
         this.meows = meows;
@@ -398,6 +402,15 @@ public final class PaperCorePlayer implements CorePlayer {
         }
     }
 
+    // Sets the player's returning state
+    @Override
+    public void setReturningPlayer(final boolean returningPlayer) {
+        if (!(Objects.equals(this.returningPlayer, returningPlayer))) {
+            this.returningPlayer = returningPlayer;
+            this.save();
+        }
+    }
+
     // Sets the player's coins value
     @Override
     public void setCoins(final int coins) {
@@ -476,6 +489,7 @@ public final class PaperCorePlayer implements CorePlayer {
                 this.allowTpa,
                 this.allowMention,
                 this.confirmed,
+                this.returningPlayer,
                 this.coins,
                 this.votes,
                 this.meows
