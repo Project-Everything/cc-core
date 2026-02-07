@@ -41,14 +41,24 @@ public final class CorePlaceholderExpansion extends PlaceholderExpansion {
     @Override
     public String onPlaceholderRequest(final Player player, final @NotNull String params) {
         switch (params) {
-            // Player placeholder
+            // Player tab placeholder
             case "player_tab" -> {
                 final Component component = this.plugin.getPlayerController().getPlayerTabComponent(player);
                 return MiniMessage.miniMessage().serialize(component);
             }
+            // Player placeholder
             case "player" -> {
                 final Component component = this.plugin.getPlayerController().getPlayerComponent(player);
                 return MiniMessage.miniMessage().serialize(component);
+            }
+            // Prefix placeholder
+            case "prefix" -> {
+                final CorePlayer corePlayer = this.plugin.getPlayerController().getPlayer(player);
+                final Component defaultPrefix = this.plugin.getConfigController().getMessage("group-default");
+
+                return corePlayer != null
+                        ? MiniMessage.miniMessage().serialize(corePlayer.getPrefix())
+                        : MiniMessage.miniMessage().serialize(defaultPrefix);
             }
             // Coins placeholder
             case "coins" -> {
