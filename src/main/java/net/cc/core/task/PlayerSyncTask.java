@@ -3,6 +3,7 @@ package net.cc.core.task;
 import lombok.RequiredArgsConstructor;
 import net.cc.core.CorePlugin;
 import net.cc.core.api.model.CoreGroup;
+import net.cc.core.api.model.CoreServer;
 import net.cc.core.api.model.player.CorePlayer;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -34,6 +35,14 @@ public final class PlayerSyncTask extends BukkitRunnable {
 
                 this.plugin.getPlayerController().validateChannels(corePlayer);
                 this.plugin.getPlayerController().updatePlayer(corePlayer);
+
+                // Returning player reward
+                if (this.plugin.getCoreServer() == CoreServer.EARTH && corePlayer.isReturningPlayer()) {
+                    corePlayer.setReturningPlayer(false);
+
+                    // TODO give player reward
+                    player.sendMessage(this.plugin.getConfigController().getMessage("server-return-message"));
+                }
             }
         });
 
