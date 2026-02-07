@@ -261,8 +261,10 @@ public final class PlayerController {
         if (corePlayer != null) {
             // Check if player is vanished
             if (corePlayer.isVanished()) {
-                return this.plugin.getConfigController().getMessage("placeholder-vanished",
-                        Placeholder.component("name", corePlayer.getDisplayName()));
+                return this.plugin.getConfigController().getMessage(
+                        "placeholder-vanished",
+                        Placeholder.component("name", corePlayer.getDisplayName())
+                );
             } else {
                 return corePlayer.getDisplayName();
             }
