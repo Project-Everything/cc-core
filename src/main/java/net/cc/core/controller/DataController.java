@@ -249,7 +249,7 @@ public final class DataController {
     }
 
     // Retrieves all CorePlayer instances from the database
-    public CompletableFuture<Set<CorePlayer>> queryPlayers() {
+    public CompletableFuture<List<CorePlayer>> queryPlayers() {
         return CompletableFuture.supplyAsync(() -> {
             try {
                 return this.executeQuery(this.sqlQueryPlayers,
@@ -263,8 +263,8 @@ public final class DataController {
     }
 
     // Creates a set of CorePlayer instances from a result set
-    private Set<CorePlayer> parsePlayers(final ResultSet resultSet) throws SQLException {
-        final Set<CorePlayer> players = new HashSet<>();
+    private List<CorePlayer> parsePlayers(final ResultSet resultSet) throws SQLException {
+        final List<CorePlayer> players = new ArrayList<>();
         while (resultSet.next()) {
             players.add(this.parsePlayer(resultSet));
         }
@@ -288,7 +288,7 @@ public final class DataController {
         final Component nickname = this.plugin.getMiniMessage().deserialize(resultSet.getString("nickname"));
         final List<UUID> friends = CoreUtils.stringToUuidList(resultSet.getString("friends"));
         final List<UUID> blocked = CoreUtils.stringToUuidList(resultSet.getString("blocked"));
-        final boolean online = resultSet.getBoolean("vanished");
+        final boolean online = resultSet.getBoolean("online");
         final boolean vanished = resultSet.getBoolean("vanished");
         final boolean spying = resultSet.getBoolean("spying");
         final boolean allowTpa = resultSet.getBoolean("allow_tpa");
